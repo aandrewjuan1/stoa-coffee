@@ -6,7 +6,7 @@
             @if($cartItems->isEmpty())
                 <p class="text-gray-400 mb-4">Your cart is empty.</p>
                 <div class="flex">
-                    <a href="{{ route('products.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Products</a>
+                    <a href="{{ route('products.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Add Products</a>
                 </div>
             @else
                 <div class="overflow-x-auto">

@@ -10,9 +10,7 @@ class CartPolicy
 {
     public function view(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN || 
-               $user->role === User::ROLE_BUYER;
+        return true;
     }
     
     /**
@@ -20,8 +18,7 @@ class CartPolicy
      */
     public function add(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN;
+        return $user->is_admin;
     }
 
     /**
@@ -29,8 +26,7 @@ class CartPolicy
      */
     public function update(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN;
+        return $user->is_admin;
     }
 
     /**
@@ -38,7 +34,6 @@ class CartPolicy
      */
     public function delete(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN;
+        return $user->is_admin;
     }
 }

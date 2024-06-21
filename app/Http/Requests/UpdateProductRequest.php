@@ -12,8 +12,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = Auth::user();
-        return in_array($user->role, ['seller', 'admin']);
+        return true;
     }
 
     /**

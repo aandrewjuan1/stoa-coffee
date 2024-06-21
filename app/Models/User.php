@@ -11,9 +11,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    const ROLE_ADMIN = 'admin';
-    const ROLE_SELLER = 'seller';
-    const ROLE_BUYER = 'buyer';
     protected $guarded = [];
     public function cart()
     {
@@ -23,11 +20,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
-    public function product()
-    {
-        return $this->hasMany(Product::class);
-    }
-
     /**
      * The attributes that should be hidden for serialization.
      *

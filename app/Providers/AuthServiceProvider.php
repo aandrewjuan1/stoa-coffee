@@ -13,9 +13,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
         *
         * @var array
         */
-       protected $policies = [
-           Product::class => ProductPolicy::class,
-       ];
+
 
        /**
         * Register any authentication / authorization services.

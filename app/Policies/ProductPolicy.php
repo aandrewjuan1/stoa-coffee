@@ -11,20 +11,13 @@ class ProductPolicy
     /**
      * Determine if the given product can be viewed by the user.
      */
-    public function view(User $user)
-    {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN || 
-               $user->role === User::ROLE_BUYER;
-    }
     
     /**
      * Determine if the given product can be created by the user.
      */
     public function create(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN;
+        return $user->is_admin;
     }
 
     /**
@@ -32,8 +25,7 @@ class ProductPolicy
      */
     public function update(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN;
+        return $user->is_admin;
     }
 
     /**
@@ -41,7 +33,6 @@ class ProductPolicy
      */
     public function delete(User $user)
     {
-        return $user->role === User::ROLE_SELLER || 
-               $user->role === User::ROLE_ADMIN;
+        return $user->is_admin;
     }
 }

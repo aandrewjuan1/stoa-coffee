@@ -58,13 +58,13 @@
                         <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 dark:text-gray-200">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-
+                        
                         @can('create', 'App\\Models\Product')
                         <x-dropdown-link :href="route('products.create')" class="text-gray-900 dark:text-gray-200">
                             {{ __('Add new product') }}
                         </x-dropdown-link>
                         @endcan
-
+                        
                         <!-- Logout -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

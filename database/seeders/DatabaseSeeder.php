@@ -17,25 +17,17 @@ class DatabaseSeeder extends Seeder
     {
 
         User::create([
-            'name' => 'Admin User',
+            'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => 'password',
-            'role' => User::ROLE_ADMIN,
             'is_admin' => true
         ]);
 
         User::create([
-            'name' => 'Seller User',
-            'email' => 'seller@example.com',
-            'password' => 'password',
-            'role' => User::ROLE_SELLER,
-        ]);
-
-        User::create([
-            'name' => 'Buyer User',
+            'name' => 'Customer',
             'email' => 'buyer@example.com',
             'password' => 'password',
-            'role' => User::ROLE_BUYER,
+            'is_admin' => false
         ]);
 
         $this->call(CategorySeeder::class);
