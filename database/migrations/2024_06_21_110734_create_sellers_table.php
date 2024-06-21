@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('sellers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->unique();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->string('address')->nullable();
             $table->string('phone_number', 20)->nullable();
             $table->timestamps();
