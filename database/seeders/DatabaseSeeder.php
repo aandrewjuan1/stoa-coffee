@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => 'password',
             'role' => User::ROLE_ADMIN,
+            'is_admin' => true
         ]);
 
         User::create([
