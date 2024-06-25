@@ -47,7 +47,7 @@
                     <x-text-input type="file" name="image" id="image" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:shadow-outline"></x-text-input> 
                 </div>
                 <div class="flex justify-between">
-                    <a href="{{ route('products.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Back to Products</a>
+                    <a href="{{ route('inventory') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Back</a>
                     <button type="submit" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Update Product</button>
                 </div>
             </form>
