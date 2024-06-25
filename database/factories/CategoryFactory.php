@@ -18,7 +18,7 @@ class CategoryFactory extends Factory
     {
         return [
             //
-            'name' => 'coffee'
+            'name' => $this->faker->unique()->word()
         ];
     }
 }

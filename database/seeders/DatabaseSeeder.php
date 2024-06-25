@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
-use Database\Factories\CategoryFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -30,8 +30,14 @@ class DatabaseSeeder extends Seeder
             'is_admin' => false
         ]);
 
-        $this->call(CategorySeeder::class);
+        $categories = Category::factory(5)->create();
+        $products = Product::factory(20)->create();
 
-        $this->call(ProductSeeder::class);
+        // Seed pivot table `category_product`
+        foreach ($products as $product) {
+            $product->categories()->attach(
+                $categories->random(rand(1, 3))->pluck('id')->toArray()
+            );
+        }
     }
 }

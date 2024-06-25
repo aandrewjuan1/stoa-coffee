@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('categories')->paginate(6);
         return view('products.index', ['products' => $products]);
     }
 
@@ -43,7 +43,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'image' => $imagePath,
-            'category_id' => 1,
+            'category_id' => 2,
         ]);
         // Redirect or return response
         return redirect()->route('products.index');

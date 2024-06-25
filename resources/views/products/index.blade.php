@@ -14,4 +14,7 @@
             @endforeach
         </div>
     </div>
+    <div class="py-4 px-4 mt-auto bottom-0 left-0">
+        {{ $products->links() }}
+    </div>
 </x-app-layout>
