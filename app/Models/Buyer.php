@@ -10,5 +10,6 @@ class Buyer extends Model
     use HasFactory;
 
     protected $guarded = [];
+    
 
 }

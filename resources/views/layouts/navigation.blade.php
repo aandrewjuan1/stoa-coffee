@@ -11,26 +11,36 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:flex">
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')" class="text-gray-900 dark:text-gray-200">
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
                         {{ __('Products') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:flex">
-                    <x-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')" class="text-gray-900 dark:text-gray-200">
+                    <x-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
                         {{ __('About Us') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:flex">
+                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        {{ __('Contact') }}
                     </x-nav-link>
                 </div>
             </div>
 
             <!-- Authentication Links -->
             @guest
-            <div class="hidden sm:flex sm:items-center sm:space-x-6">
-                <a href="{{ route('login') }}" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
-                    {{ __('Log in') }}
-                </a>
-                <a href="{{ route('register') }}" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
-                    {{ __('Register') }}
-                </a>
+            <div class="flex items-center">
+
+                <div class="hidden space-x-8 sm:-my-px sm:flex">
+                    <x-nav-link href="{{ route('login') }}" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        {{ __('Log in') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:flex">
+                    <x-nav-link href="{{ route('register') }}" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        {{ __('Register') }}
+                    </x-nav-link>
+                </div>
                 @include('components.dark-mode-toggle')
             </div>
             @endguest
@@ -46,7 +56,7 @@
                     <x-slot name="trigger">
                         <button class="flex items-center text-sm font-medium text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out focus:outline-none">
                             <div>{{ Auth::user()->name }}</div>
-                            <div class="ms-1">
+                            <div class="ms-1">      
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
@@ -58,13 +68,9 @@
                         <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 dark:text-gray-200">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        
-                        @can('create', 'App\\Models\Product')
-                        <x-dropdown-link :href="route('products.create')" class="text-gray-900 dark:text-gray-200">
-                            {{ __('Add new product') }}
+                        <x-dropdown-link :href="route('inventory')" class="text-gray-900 dark:text-gray-200">
+                            {{ __('Inventory') }}
                         </x-dropdown-link>
-                        @endcan
-                        
                         <!-- Logout -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
