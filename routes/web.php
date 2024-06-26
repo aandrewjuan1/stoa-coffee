@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Route;
 //Shop
 require __DIR__.'/shop.php';
 
-//Inventory
-Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory');
-
 // Navigation
 Route::view('/', 'home')->name('home');
 Route::view('/about-us', 'about-us')->name('about-us');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::view('/contact', 'contact')->name('contact');
+
+//Inventory
+Route::get('/inventory', [InventoryController::class, 'index'])
+    ->middleware(['admin']) 
+    ->name('inventory');
 
 // Profile
 Route::middleware('auth')->group(function () {

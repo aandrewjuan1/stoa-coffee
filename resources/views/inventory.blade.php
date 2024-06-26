@@ -31,7 +31,7 @@
                     <tbody>
                         @foreach ($products as $product)
                         <tr">
-                            <td class="border px-4 py-2">{{ $product->name }}</td>
+                            <td class="border px-4 py-2"><a href="{{route('products.show', ['product' => $product])}}">{{ $product->name }}</a></td>
                             <td class="border px-4 py-2">{{ $product->description }}</td>
                             <td class="border px-4 py-2">{{ $product->price }}</td>
                             <td class="border px-4 py-2">

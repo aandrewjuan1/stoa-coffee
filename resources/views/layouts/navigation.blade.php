@@ -68,9 +68,11 @@
                         <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 dark:text-gray-200">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('inventory')" class="text-gray-900 dark:text-gray-200">
-                            {{ __('Inventory') }}
-                        </x-dropdown-link>
+                        @can('admin')
+                            <x-dropdown-link :href="route('inventory')" class="text-gray-900 dark:text-gray-200">
+                                {{ __('Inventory') }}
+                            </x-dropdown-link>
+                        @endcan
                         <!-- Logout -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

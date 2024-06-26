@@ -43,7 +43,6 @@ class ProductController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'image' => $imagePath,
-            'category_id' => 2,
         ]);
         // Redirect or return response
         return redirect()->route('products.index');
