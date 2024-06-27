@@ -6,9 +6,15 @@
                 <a href="{{ route('products.show', $product->name) }}" class="block dark:bg-gray-800 bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 hover:shadow-lg">
                     <img src="{{ $product->image }}" class="w-full h-48 object-cover" alt="{{ $product->name }}">
                     <div class="p-4">
-                        <h5 class="text-xl font-bold mb-2 ">{{ $product->name }}</h5>
-                        <p class=" mb-2">{{ $product->description }}</p>
-                        <p class=" font-bold mb-4">₱{{ $product->price }}</p>
+                        <h5 class="text-xl font-bold mb-2">{{ $product->name }}</h5>
+                        <p class="mb-2">{{ $product->description }}</p>
+                        <p class="font-bold mb-4">₱{{ $product->price }}</p>
+                        
+                        <div class="flex space-x-2">
+                            @foreach($product->categories as $category)
+                                <span class="px-2 py-1 bg-gray-200 text-gray-800 rounded-lg">{{ $category->name }}</span>
+                            @endforeach
+                        </div>
                     </div>
                 </a>
             @endforeach

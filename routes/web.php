@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ProductController;
@@ -17,7 +18,10 @@ Route::view('/contact', 'contact')->name('contact');
 //Inventory
 Route::get('/inventory', [InventoryController::class, 'index'])
     ->middleware(['admin']) 
-    ->name('inventory');
+    ->name('inventory.index');
+
+// Category
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create'); 
 
 // Profile
 Route::middleware('auth')->group(function () {

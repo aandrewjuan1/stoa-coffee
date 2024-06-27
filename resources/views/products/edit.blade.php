@@ -28,6 +28,17 @@
                 </div>
 
                 <div class="mb-4">
+                    <x-input-label for="categories" :value="__('Categories')" />
+                    <div class="grid grid-cols-3 gap-4">
+                        @foreach ($categories as $category)
+                            <label class="flex items-center">
+                                <input type="checkbox" name="categories[]" value="{{ $category->id }}" {{ $product->categories->contains($category->id) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-gray-600"><span>{{ $category->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+                
+                <div class="mb-4">
                     <x-input-label for="description" :value="__('Description')" />
                     <x-text-input as="textarea" name="description" id="description" class="w-full p-2 border border-gray-300 rounded" value="{{ $product->description }}" required></x-text-input>
                 </div>
@@ -46,8 +57,9 @@
                     @endif
                     <x-text-input type="file" name="image" id="image" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:shadow-outline"></x-text-input> 
                 </div>
+
                 <div class="flex justify-between">
-                    <a href="{{ route('inventory') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Back</a>
+                    <a href="{{ route('inventory.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Back</a>
                     <button type="submit" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Update Product</button>
                 </div>
             </form>

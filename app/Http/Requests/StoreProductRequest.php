@@ -27,6 +27,9 @@ class StoreProductRequest extends FormRequest
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // max size 2MB
+            'categories' => 'required|array|min:1', // Ensure at least one category is selected
+            'categories.*' => 'exists:categories,id', // Validate each category ID in the array
         ];
     }
+
 }

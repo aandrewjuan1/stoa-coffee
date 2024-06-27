@@ -18,7 +18,7 @@
                             <tr class="border-b border-gray-700">
                                 <td class="py-3 px-4">{{ $item->product->name }}</td>
                                 <td class="py-3 px-4">{{ $item->quantity }}</td>
-                                <td class="py-3 px-4">₱{{ $item->price }}</td>
+                                <td class="py-3 px-4">₱{{ $item->price * $item->quantity }}</td>
                             </tr>
                         @endforeach
                     </tbody>

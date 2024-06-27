@@ -10,7 +10,7 @@ class InventoryController extends Controller
     //
     public function index(Product $products)
     {
-        $products = Product::all();
-        return view('inventory', ['products' => $products]);
+        $products = Product::with('categories')->get();
+        return view('inventory.index', ['products' => $products]);
     }
 }

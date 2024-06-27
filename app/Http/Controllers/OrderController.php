@@ -6,6 +6,7 @@ use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -45,6 +46,14 @@ class OrderController extends Controller
                     'quantity' => $cartItem['quantity'],
                     'price' => $cartItem['price'],
                 ]);
+
+                // Update product quantity
+                $product = Product::find($cartItem['product_id']);
+                if ($product) {
+                    $product->decrement('quantity', $cartItem['quantity']);
+                } else {
+                    throw new \Exception('Product not found.');
+                }
             }
 
             // Clear the user's cart

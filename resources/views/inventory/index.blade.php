@@ -7,13 +7,16 @@
             <div class="relative">
                 <input type="text" class="border border-gray-300 rounded-md py-2 px-4 w-64 focus:outline-none focus:border-blue-500" placeholder="Search products..." name="search">
                 <!-- Search icon if needed -->
-                <!-- <button type="submit" class="absolute right-0 top-0 mt-2 mr-2">
+                <button type="submit" class="absolute right-0 top-0 mt-2 mr-2">
                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path d="M21 21l-5.2-5.2M15 10a5 5 0 11-10 0 5 5 0 0110 0z"></path>
                     </svg>
-                </button> -->
+                </button>
             </div>
-            <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Product</a>
+            <div>
+                <a href="{{ route('categories.create') }}" class="bg-green-500 hover:bg-green-600 text-white mr-2 py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Category</a>            
+                <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Product</a>
+            </div>
         </div>
 
         <!-- Products Table -->
@@ -25,15 +28,23 @@
                             <th class="px-4 py-2">Name</th>
                             <th class="px-4 py-2">Description</th>
                             <th class="px-4 py-2">Price</th>
+                            <th class="px-4 py-2">Quantity</th>
+                            <th class="px-4 py-2">Categories</th>
                             <th class="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($products as $product)
-                        <tr">
-                            <td class="border px-4 py-2"><a href="{{route('products.show', ['product' => $product])}}">{{ $product->name }}</a></td>
+                        <tr>
+                            <td class="border px-4 py-2"><a href="{{ route('products.show', ['product' => $product]) }}">{{ $product->name }}</a></td>
                             <td class="border px-4 py-2">{{ $product->description }}</td>
                             <td class="border px-4 py-2">{{ $product->price }}</td>
+                            <td class="border px-4 py-2">{{ $product->quantity }}</td>
+                            <td class="border px-4 py-2">
+                                @foreach ($product->categories as $category)
+                                    <span class="bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-sm mr-2">{{ $category->name }}</span>
+                                @endforeach
+                            </td>
                             <td class="border px-4 py-2">
                                 <a href="{{ route('products.edit', ['product' => $product]) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md shadow-md transition duration-300 ease-in-out">Edit</a>
                                 <form action="{{ route('products.destroy', ['product' => $product]) }}" method="POST" style="display: inline;">

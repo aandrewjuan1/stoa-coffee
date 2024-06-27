@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -23,7 +24,8 @@ class ProductController extends Controller
     public function create()
     {
         //
-        return view('products.create');
+        $categories = Category::all();
+        return view('products.create', ['categories' => $categories]);
     }
 
     /**
@@ -38,12 +40,19 @@ class ProductController extends Controller
         }
 
         // Create a new product
-        Product::create([
+        $product = Product::create([
             'name' => $request->product_name,
             'description' => $request->description,
             'price' => $request->price,
             'image' => $imagePath,
         ]);
+
+
+        // Attach categories to the product
+        if ($request->has('categories')) {
+            $product->categories()->attach($request->categories);
+        }
+
         // Redirect or return response
         return redirect()->route('products.index');
     }
@@ -64,7 +73,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         //
-        return view('products.edit', ['product' => $product]);
+        $categories = Category::all();
+        return view('products.edit', ['product' => $product, 'categories' => $categories]);
 
     }
 
@@ -86,10 +96,16 @@ class ProductController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'image' => $imagePath,
-            'category_id' => 1,
         ]);
+
+        // Sync categories to the product (detach existing and attach new)
+        if ($request->has('categories')) {
+            $product->categories()->sync($request->categories); // Sync ensures no duplicates
+        } else {
+            $product->categories()->detach(); // If no categories selected, detach all
+        }
         // Redirect or return response
-        return redirect()->route('products.show', ['product' => $product]);
+        return redirect()->route('inventory.index');
 
     }
 
