@@ -3,20 +3,20 @@
         <h2 class="text-4xl font-semibold mb-4 mt-4">Inventory</h2>
 
         <!-- Search and Add New Product Button -->
-        <div class="flex justify-between items-center mb-4">
-            <div class="relative">
-                <input type="text" class="border border-gray-300 rounded-md py-2 px-4 w-64 focus:outline-none focus:border-blue-500" placeholder="Search products..." name="search">
-                <!-- Search icon if needed -->
-                <button type="submit" class="absolute right-0 top-0 mt-2 mr-2">
-                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M21 21l-5.2-5.2M15 10a5 5 0 11-10 0 5 5 0 0110 0z"></path>
-                    </svg>
-                </button>
-            </div>
-            <div>
+        <div class="flex justify-between mb-4">
+            <!-- Search Form -->
+            <form action="{{ route('inventory.search') }}" method="GET" class="inline-block">
+                <div class="flex">
+                    <input type="text" name="query" placeholder="Search products..." class="border border-gray-300 rounded-md py-2 px-4 mr-2">
+                    <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">
+                        Search
+                    </button>
+                </div>
+            </form>    
+            <div class="flex">
                 <a href="{{ route('categories.create') }}" class="bg-green-500 hover:bg-green-600 text-white mr-2 py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Category</a>            
-                <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Product</a>
-            </div>
+                <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Product</a>        
+            </div>    
         </div>
 
         <!-- Products Table -->
