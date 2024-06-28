@@ -5,7 +5,7 @@
         <!-- Search and Add New Product Button -->
         <div class="flex justify-between mb-4">
             <!-- Search Form -->
-            <form action="{{ route('inventory.search') }}" method="GET" class="inline-block">
+            <form action="{{ route('inventory.index') }}" method="GET" class="inline-block">
                 <div class="flex">
                     <input type="text" name="query" placeholder="Search products..." class="border border-gray-300 rounded-md py-2 px-4 mr-2">
                     <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">

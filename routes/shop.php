@@ -6,7 +6,6 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Products
-Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/products/create', [ProductController::class, 'create'])->middleware('admin')->name('products.create');
 Route::get('/products/{product:name}', [ProductController::class, 'show'])->name('products.show');
 Route::middleware(['admin'])->group(function () {    

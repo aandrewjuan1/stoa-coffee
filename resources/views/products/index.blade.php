@@ -3,7 +3,7 @@
         <h1 class="text-center text-4xl font-bold my-8">Our Coffee Products</h1>
         <!-- Search Form -->
         <div class="flex justify-center my-8">
-            <form action="{{ route('products.search') }}" method="GET" class="inline-block">
+            <form action="{{ route('products.index') }}" method="GET" class="inline-block">
                 <div class="flex">
                     <input type="text" name="query" placeholder="Search products..." class="border border-gray-300 rounded-md py-2 px-4 mr-2">
                     <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">

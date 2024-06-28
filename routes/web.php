@@ -19,9 +19,6 @@ Route::view('/contact', 'contact')->name('contact');
 Route::get('/inventory', [InventoryController::class, 'index'])
     ->middleware(['admin']) 
     ->name('inventory.index');
-Route::get('/inventory/search', [InventoryController::class, 'search'])
-    ->middleware('admin')
-    ->name('inventory.search');
 
 // Category
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create'); 
