@@ -42,7 +42,9 @@
                             <td class="border px-4 py-2">{{ $product->quantity }}</td>
                             <td class="border px-4 py-2">
                                 @foreach ($product->categories as $category)
-                                    <span class="bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-sm mr-2">{{ $category->name }}</span>
+                                    <a href="{{route('inventory.index', ['category' => $category->id])}}" class="bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-sm mr-2" >
+                                        {{ $category->name }}
+                                    </a>
                                 @endforeach
                             </td>
                             <td class="border px-4 py-2">

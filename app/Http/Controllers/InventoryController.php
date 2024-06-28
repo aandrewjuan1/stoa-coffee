@@ -27,7 +27,17 @@ class InventoryController extends Controller
                             })
                             ->with('categories')
                             ->get();
-        } else 
+        } 
+        if ($request->has('category')) {
+            $categoryId = $request->input('category');
+        
+            $products = Product::query()
+                            ->whereHas('categories', function ($query) use ($categoryId) {
+                                $query->where('categories.id', $categoryId); // Specify 'categories.id' here
+                            })
+                            ->get();
+        }
+        else 
         {
             $products = Product::with('categories')->get();
         }
