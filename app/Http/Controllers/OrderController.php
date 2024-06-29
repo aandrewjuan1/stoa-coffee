@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function order(Request $request)
+    public function store(Request $request)
     {
         // Validate the request inputs
         $validatedData = $request->validate([
@@ -63,7 +63,7 @@ class OrderController extends Controller
             DB::commit();
 
             // Redirect to the order success page with the order details
-            return view('order-success', compact('order'));
+            return view('orders.order-success', compact('order'));
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();

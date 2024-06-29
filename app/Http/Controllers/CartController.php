@@ -74,7 +74,7 @@ class CartController extends Controller
             DB::commit();
 
             // Redirect back with a success message
-            return redirect(route('products.index'))->with('success', 'Product added to cart successfully!');
+            return redirect(route('menu.index'))->with('success', 'Product added to cart successfully!');
         } catch (\Exception $e) {
             // Rollback the transaction if there's an error
             DB::rollBack();

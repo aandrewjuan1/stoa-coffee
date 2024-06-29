@@ -6,7 +6,7 @@
             @if($cartItems->isEmpty())
                 <p class="text-gray-400 mb-4">Your cart is empty.</p>
                 <div class="flex">
-                    <a href="{{ route('products.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Add Products</a>
+                    <a href="{{ route('menu.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Add Products</a>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -46,7 +46,7 @@
                     <h2 class="mt-6 text-xl font-bold mb-4">Total: ₱{{ $cartItems->sum(fn($item) => $item->product->price * $item->quantity) }}</h2>
                 </div>
                 <div class="flex mt-6">
-                    <a href="{{ route('products.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Back</a>            
+                    <a href="{{ route('menu.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Back</a>            
                     <form action="{{ route('order') }}" method="POST" class="ml-2">
                         @csrf
                         @foreach($cartItems as $item)

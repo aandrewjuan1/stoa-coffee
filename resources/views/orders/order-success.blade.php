@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-8 flex justify-center items-center h-full">
         <div class="bg-gray-800 text-white p-6 rounded-lg shadow-md max-w-lg w-full">
-            <h1 class="text-2xl font-bold mb-6">Order Successful</h1>
+            <h1 class="text-2xl font-bold mb-6">Pending Order</h1>
             <p class="text-gray-400 mb-4">Thank you for your purchase! Here are your order details:</p>
 
             <div class="overflow-x-auto">
@@ -27,7 +27,7 @@
             </div>
             
             <div class="flex justify-center mt-6">
-                <a href="{{ route('products.index') }}" class="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-600">Continue Shopping</a>            
+                <a href="{{ route('menu.index') }}" class="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-600">Continue Shopping</a>            
             </div>
         </div>
     </div>

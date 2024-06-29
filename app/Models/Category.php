@@ -15,4 +15,9 @@ class Category extends Model
     {
         return $this->belongsToMany(Product::class)->withTimestamps();
     }
+
+    public function types()
+    {
+        return $this->hasMany(CategoryType::class);
+    }
 }

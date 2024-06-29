@@ -7,7 +7,7 @@
             <!-- Search Form -->
             <form action="{{ route('inventory.index') }}" method="GET" class="inline-block">
                 <div class="flex">
-                    <input type="text" name="query" placeholder="Search products..." class="border border-gray-300 rounded-md py-2 px-4 mr-2">
+                    <input type="text" name="query" placeholder="Search products..." class="dark:bg-gray-800 border border-gray-300 rounded-md py-2 px-4 mr-2">
                     <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">
                         Search
                     </button>
@@ -28,7 +28,7 @@
                             <th class="px-4 py-2">Name</th>
                             <th class="px-4 py-2">Description</th>
                             <th class="px-4 py-2">Price</th>
-                            <th class="px-4 py-2">Quantity</th>
+                            {{-- <th class="px-4 py-2">Quantity</th> --}}
                             <th class="px-4 py-2">Categories</th>
                             <th class="px-4 py-2">Actions</th>
                         </tr>
@@ -39,7 +39,7 @@
                             <td class="border px-4 py-2"><a href="{{ route('products.show', ['product' => $product]) }}">{{ $product->name }}</a></td>
                             <td class="border px-4 py-2">{{ $product->description }}</td>
                             <td class="border px-4 py-2">{{ $product->price }}</td>
-                            <td class="border px-4 py-2">{{ $product->quantity }}</td>
+                            {{-- <td class="border px-4 py-2">{{ $product->quantity }}</td> --}}
                             <td class="border px-4 py-2">
                                 @foreach ($product->categories as $category)
                                     <a href="{{route('inventory.index', ['category' => $category->id])}}" class="bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-sm mr-2" >

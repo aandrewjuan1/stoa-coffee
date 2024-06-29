@@ -13,32 +13,6 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        if ($request->has('query'))
-        {
-             // Validate the search query
-            $request->validate([
-                'query' => 'required|string|min:3', // Example validation rules
-            ]);
-
-            // Get the search query from the request
-            $searchQuery = $request->input('query');
-
-            // Perform the search
-            $products = Product::where('name', 'like', '%'.$searchQuery.'%')
-                            ->orWhere('description', 'like', '%'.$searchQuery.'%')
-                            ->orWhereHas('categories', function ($query) use ($searchQuery) {
-                                $query->where('name', 'like', '%'.$searchQuery.'%');
-                            })
-                            ->with('categories')
-                            ->paginate(6);
-        } else {
-            $products = Product::with('categories')->paginate(6);
-        };
-
-        return view('products.index', ['products' => $products]);
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -76,7 +50,7 @@ class ProductController extends Controller
         }
 
         // Redirect or return response
-        return redirect()->route('products.index');
+        return redirect()->route('menu.index');
     }
 
     /**
@@ -139,6 +113,6 @@ class ProductController extends Controller
         //
         $product->delete();
 
-        return redirect()->route('products.index');
+        return redirect()->route('menu.index');
     }
 }

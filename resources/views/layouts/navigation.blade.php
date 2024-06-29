@@ -11,8 +11,8 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:flex">
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
-                        {{ __('Products') }}
+                    <x-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')" class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        {{ __('Menu') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:flex">
@@ -45,13 +45,14 @@
             </div>
             @endguest
 
-            <!-- User Dropdown -->
+            {{-- Right side nav --}}
             @auth
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <a href="{{ route('cart.index') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out me-4">
-                    <i class="fas fa-shopping-cart"></i>
-                </a>
-
+                @can('view', 'App\\Models\Cart')
+                    <a href="{{ route('cart.index') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out me-4">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                @endcan
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center text-sm font-medium text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out focus:outline-none">
@@ -104,7 +105,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')" class="text-gray-900 dark:text-gray-200">
+            <x-responsive-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')" class="text-gray-900 dark:text-gray-200">
                 {{ __('Products') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')" class="text-gray-900 dark:text-gray-200">
