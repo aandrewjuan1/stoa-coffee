@@ -12,7 +12,7 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: 'coffee-shop.test',
+        host: 'stoa-coffee.test',
         port: 5173,
       },
 });
