@@ -7,6 +7,9 @@ use App\Models\Product;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Order;
+use App\Models\OrderItem;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,8 +27,22 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Customer',
-            'email' => 'buyer@example.com',
+            'name' => 'Customer1',
+            'email' => 'buyer1@example.com',
+            'password' => 'password',
+            'is_admin' => false
+        ]);
+
+        User::create([
+            'name' => 'Customer2',
+            'email' => 'buyer2@example.com',
+            'password' => 'password',
+            'is_admin' => false
+        ]);
+
+        User::create([
+            'name' => 'Customer3',
+            'email' => 'buyer3@example.com',
             'password' => 'password',
             'is_admin' => false
         ]);
@@ -39,5 +56,10 @@ class DatabaseSeeder extends Seeder
                 $categories->random(rand(1, 3))->pluck('id')->toArray()
             );
         }
+
+        // Generate orders and order items
+        Order::factory(20)->create()->each(function ($order) {
+            OrderItem::factory(random_int(3,10))->create(['order_id' => $order->id]);
+        });
     }
 }

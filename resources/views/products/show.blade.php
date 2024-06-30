@@ -26,14 +26,16 @@
                         </div>
                         
                         @auth
-                            <div class="flex justify-between mt-4" x-data="{ quantity: 1 }">
-                                <form action="{{ route('cart.add') }}" method="POST" class="flex items-center">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="number" name="quantity" x-model="quantity" min="1" class="w-16 text-center border rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200">
-                                    <button type="submit" class="bg-green-700 dark:bg-white text-white dark:text-black py-2 px-4 rounded hover:bg-green-600 dark:hover:bg-gray-200 ml-2">Add to Cart</button>
-                                </form>
-                            </div>
+                            @can('view', 'App\\Models\Cart')
+                                <div class="flex justify-between mt-4" x-data="{ quantity: 1 }">
+                                    <form action="{{ route('cart.add') }}" method="POST" class="flex items-center">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="number" name="quantity" x-model="quantity" min="1" class="w-16 text-center border rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200">
+                                        <button type="submit" class="bg-green-700 dark:bg-white text-white dark:text-black py-2 px-4 rounded hover:bg-green-600 dark:hover:bg-gray-200 ml-2">Add to Cart</button>
+                                    </form>
+                                </div>
+                            @endcan
                         @endauth
                         
                         <div class="flex mt-4">

@@ -113,6 +113,6 @@ class ProductController extends Controller
         //
         $product->delete();
 
-        return redirect()->route('menu.index');
+        return redirect()->route('inventory.index');
     }
 }

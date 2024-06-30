@@ -47,7 +47,7 @@
                 </div>
                 <div class="flex mt-6">
                     <a href="{{ route('menu.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600">Back</a>            
-                    <form action="{{ route('order') }}" method="POST" class="ml-2">
+                    <form action="{{ route('orders.store') }}" method="POST" class="ml-2">
                         @csrf
                         @foreach($cartItems as $item)
                             <input type="hidden" name="cartItems[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">

@@ -10,40 +10,42 @@ class MenuController extends Controller
     //
     public function index(Request $request)
     {
-        if ($request->has('query'))
-        {
-             // Validate the search query
-            $request->validate([
-                'query' => 'required|string|min:3', // Example validation rules
-            ]);
+            // Validate the search and category inputs
+        $request->validate([
+            'query' => 'nullable|string|min:3',
+            'category' => 'nullable|string|exists:categories,name'
+        ]);
 
-            // Get the search query from the request
+        // Start building the query
+        $productsQuery = Product::query();
+
+        // Apply search query if present
+        if ($request->filled('query')) {
             $searchQuery = $request->input('query');
-
-            // Perform the search
-            $products = Product::where('name', 'like', '%'.$searchQuery.'%')
-                            ->orWhere('description', 'like', '%'.$searchQuery.'%')
-                            ->orWhereHas('categories', function ($query) use ($searchQuery) {
-                                $query->where('name', 'like', '%'.$searchQuery.'%');
-                            })
-                            ->with('categories')
-                            ->paginate(6);
-        } 
-        if ($request->has('category')) 
-        {
-            $category = $request->input('category');
-        
-            $products = Product::query()
-                            ->whereHas('categories', function ($query) use ($category) {
-                                $query->where('categories.name', $category);
-                            })
-                            ->paginate(6);
+            $productsQuery->where('name', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('description', 'like', '%' . $searchQuery . '%')
+                    ->orWhereHas('categories', function ($query) use ($searchQuery) {
+                        $query->where('name', 'like', '%' . $searchQuery . '%');
+                    });
         }
-        else 
-        {
-            $products = Product::with('categories')->paginate(6);
-        };
+
+        // Apply category filter if present
+        if ($request->filled('category')) {
+            $category = $request->input('category');
+            $productsQuery->whereHas('categories', function ($query) use ($category) {
+                $query->where('name', $category);
+            });
+        }
+
+        // Paginate the results
+        $products = $productsQuery->with('categories')->paginate(6);
 
         return view('menu.index', ['products' => $products]);
+    }
+
+
+    public function showProduct(Product $product)
+    {
+        return view('products.show', ['product' => $product]);
     }
 }

@@ -2,6 +2,7 @@
     <div class="container mx-auto px-4 py-8 flex justify-center items-center h-full">
         <div class="bg-gray-800 text-white p-6 rounded-lg shadow-md max-w-lg w-full">
             <h1 class="text-2xl font-bold mb-6">Pending Order</h1>
+            <h2 class="mt-6 text-xl font-bold mb-4">Order ID: {{ $order->id }}</h2>
             <p class="text-gray-400 mb-4">Thank you for your purchase! Here are your order details:</p>
 
             <div class="overflow-x-auto">

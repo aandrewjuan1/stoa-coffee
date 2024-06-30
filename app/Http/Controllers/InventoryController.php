@@ -9,39 +9,39 @@ class InventoryController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->has('query'))
-        {
-            // Validate the search query
-            $request->validate([
-                'query' => 'required|string|min:3', // Example validation rules
-            ]);
+        // Validate the search and category inputs
+        $request->validate([
+            'query' => 'nullable|string|min:3',
+            'category' => 'nullable|integer|exists:categories,id' // Change validation to expect category ID
+        ]);
 
-            // Get the search query from the request
+        // Start building the query
+        $productsQuery = Product::query();
+
+        // Apply search query if present
+        if ($request->filled('query')) {
             $searchQuery = $request->input('query');
 
-            // Perform the search
-            $products = Product::where('name', 'like', '%'.$searchQuery.'%')
-                            ->orWhere('description', 'like', '%'.$searchQuery.'%')
-                            ->orWhereHas('categories', function ($query) use ($searchQuery) {
-                                $query->where('name', 'like', '%'.$searchQuery.'%');
-                            })
-                            ->with('categories')
-                            ->get();
-        } 
-        if ($request->has('category')) {
+            $productsQuery->where('name', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('description', 'like', '%' . $searchQuery . '%')
+                        ->orWhereHas('categories', function ($query) use ($searchQuery) {
+                            $query->where('name', 'like', '%' . $searchQuery . '%');
+                        });
+        }
+
+        // Apply category filter if present
+        if ($request->filled('category')) {
             $categoryId = $request->input('category');
-        
-            $products = Product::query()
-                            ->whereHas('categories', function ($query) use ($categoryId) {
-                                $query->where('categories.id', $categoryId); // Specify 'categories.id' here
-                            })
-                            ->get();
+
+            $productsQuery->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('categories.id', $categoryId);
+            });
         }
-        else 
-        {
-            $products = Product::with('categories')->get();
-        }
+
+        // Execute the query
+        $products = $productsQuery->with('categories')->paginate(20);
 
         return view('inventory.index', ['products' => $products]);
     }
+
 }

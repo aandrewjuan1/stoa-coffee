@@ -64,7 +64,6 @@
                             </div>
                         </button>
                     </x-slot>
-
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 dark:text-gray-200">
                             {{ __('Profile') }}
@@ -72,6 +71,9 @@
                         @can('admin')
                             <x-dropdown-link :href="route('inventory.index')" class="text-gray-900 dark:text-gray-200">
                                 {{ __('Inventory') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('orders.index')" class="text-gray-900 dark:text-gray-200">
+                                {{ __('Orders') }}
                             </x-dropdown-link>
                         @endcan
                         <!-- Logout -->
@@ -106,10 +108,13 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')" class="text-gray-900 dark:text-gray-200">
-                {{ __('Products') }}
+                {{ __('Menu') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')" class="text-gray-900 dark:text-gray-200">
                 {{ __('About Us') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')" class="text-gray-900 dark:text-gray-200">
+                {{ __('Contact') }}
             </x-responsive-nav-link>
         </div>
 

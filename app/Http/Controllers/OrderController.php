@@ -12,6 +12,43 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        // Retrieve all orders ordered by status (pending first, then processing)
+        $orders = Order::with(['user', 'orderItems.product'])
+                        ->orderBy('status', 'asc')
+                        ->get();
+        
+        // Separate orders into pending and processing
+        $pendingOrders = $orders->where('status', 'pending');
+        $processingOrders = $orders->where('status', 'processing');
+        
+        return view('orders.index', [
+            'pendingOrders' => $pendingOrders,
+            'processingOrders' => $processingOrders,
+        ]);
+    }
+
+    public function show(Order $order)
+    {
+        return view('orders.show', ['order' => $order]);
+    }
+
+    public function update(Request $request, Order $order)
+    {
+        // Validate the request
+        $request->validate([
+            'status' => 'required|string|in:processing,completed', // Define valid status values
+        ]);
+
+        // Update the order status
+        $order->update(['status' => $request->status]);
+
+        // Redirect back to the order details page
+        return redirect()->route('orders.show', ['order' => $order]);
+    }
+
+
     public function store(Request $request)
     {
         // Validate the request inputs
@@ -62,12 +99,17 @@ class OrderController extends Controller
             // Commit the transaction
             DB::commit();
 
-            // Redirect to the order success page with the order details
-            return view('orders.order-success', compact('order'));
+            // Redirect to the order success page
+            return redirect()->route('orders.success', ['order' => $order]);
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
             return redirect()->route('cart.index')->with('error', 'There was an error placing your order. Please try again.');
         }
+    }
+
+    public function showOrderSuccess(Order $order)
+    {
+        return view('orders.order-success', compact('order'));
     }
 }

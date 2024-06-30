@@ -11,7 +11,6 @@ use App\Http\Controllers\OrderController;
 
 // Navigation
 Route::view('/', 'home')->name('home');
-Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 Route::view('/about-us', 'about-us')->name('about-us');
 Route::view('/contact', 'contact')->name('contact');
 
@@ -22,14 +21,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Inventory, Categories, and Products
-Route::middleware(['admin'])->group(function () {    
+// Menu
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+Route::get('/menu/{product:name}', [MenuController::class, 'showProduct'])->name('menu.showProduct'); 
+
+
+// Inventory, Categories, and Products (admin)
+Route::middleware(['admin'])->group(function () {
+    // Category
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create'); 
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    // Inventory 
     Route::get('/inventory', [InventoryController::class, 'index'])
         ->name('inventory.index');
+    // Products
     Route::get('/products/create', [ProductController::class, 'create'])
         ->name('products.create');
     Route::post('/products/create', [ProductController::class, 'store'])
         ->name('products.store');
+    Route::get('/products/{product:name}', [ProductController::class, 'show'])
+    ->name('products.show'); 
     Route::get('/products/{product:name}/edit', [ProductController::class, 'edit'])
         ->name('products.edit');
     Route::put('/products/{product:name}', [ProductController::class, 'update'])
@@ -37,11 +48,6 @@ Route::middleware(['admin'])->group(function () {
     Route::delete('/products/{product:name}', [ProductController::class, 'destroy'])
         ->name('products.destroy');
 });
-Route::get('/products/{product:name}', [ProductController::class, 'show'])->name('products.show'); // even guest can see this route
-
-// Category
-Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create'); 
-Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store'); 
 
 // Cart
 Route::middleware('auth')->group(function() {
@@ -51,12 +57,23 @@ Route::middleware('auth')->group(function() {
     Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-// Order
-Route::post('/order', [OrderController::class, 'store'])
-    ->middleware('auth')
-    ->name('order');
-Route::middleware('admin')->group(function(){
+// Orders (buyer)
+Route::middleware('auth')->group(function(){
+    Route::post('/orders', [OrderController::class, 'store'])
+        ->name('orders.store');
+    Route::get('/orders/{order}/success', [OrderController::class, 'showOrderSuccess'])
+        ->can('view', 'order')
+        ->name('orders.success');
+});
 
+// Orders (admin)
+Route::middleware('admin')->group(function(){
+    Route::get('/orders', [OrderController::class, 'index'])
+        ->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])
+        ->name('orders.show');
+    Route::put('/orders/{order}', [OrderController::class,'update'])
+        ->name('orders.update');
 });
 
 // Auth
