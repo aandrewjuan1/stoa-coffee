@@ -10,6 +10,6 @@ class CartPolicy
 {
     public function view(User $user)
     {
-        return !$user->is_admin;
+        return $user->buyer !== null;
     }
 }

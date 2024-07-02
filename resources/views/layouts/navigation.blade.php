@@ -72,6 +72,8 @@
                             <x-dropdown-link :href="route('inventory.index')" class="text-gray-900 dark:text-gray-200">
                                 {{ __('Inventory') }}
                             </x-dropdown-link>
+                        @endcan
+                        @can('baristaOrAdmin')
                             <x-dropdown-link :href="route('orders.index')" class="text-gray-900 dark:text-gray-200">
                                 {{ __('Orders') }}
                             </x-dropdown-link>

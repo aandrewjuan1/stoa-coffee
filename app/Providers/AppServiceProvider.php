@@ -23,5 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Manually define general abilities using the GeneralPolicy methods
         Gate::define('admin', [GeneralPolicy::class, 'admin']);
+        Gate::define('baristaOrAdmin', [GeneralPolicy::class, 'baristaOrAdmin']);
+        Gate::define('buyer', [GeneralPolicy::class, 'buyer']);
     }
 }

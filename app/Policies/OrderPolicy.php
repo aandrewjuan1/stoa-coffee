@@ -14,6 +14,11 @@ class OrderPolicy
     public function view(User $user, Order $order): bool
     {
         //
-        return $user->id === $order->user_id;
+        if($user->id !== $order->user_id)
+        {
+            abort(404);
+        }
+
+        return true;
     }
 }

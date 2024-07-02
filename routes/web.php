@@ -66,8 +66,8 @@ Route::middleware('auth')->group(function(){
         ->name('orders.success');
 });
 
-// Orders (admin)
-Route::middleware('admin')->group(function(){
+// Orders (admin or barista)
+Route::middleware('can:baristaOrAdmin')->group(function(){
     Route::get('/orders', [OrderController::class, 'index'])
         ->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])
