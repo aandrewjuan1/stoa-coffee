@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddToCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Customization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
@@ -20,54 +23,86 @@ class CartController extends Controller
             $cartItems = collect();
         } else {
             // Fetch cart items for the authenticated user's cart
-            $cartItems = CartItem::where('cart_id', $cart->id)->get();
+            $cartItems = CartItem::where('cart_id', $cart->id)->with('customizations')->get();
         }
 
         // Pass the cart items and cart ID to the view
         return view('cart.index', ['cartItems' => $cartItems, 'cart' => $cart]);
     }
 
-    public function add(Request $request)
+    public function add(AddToCartRequest $request)
     {
-        // Validate the request
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
-        ]);
-
-        // Start a database transaction
-        DB::beginTransaction();
+        // Get the authenticated user ID
+        $userId = Auth::id();
 
         try {
-            // Get the authenticated user ID
-            $userId = Auth::id();
+            // Start a database transaction
+            DB::beginTransaction();
 
-            // Get the cart ID associated with the authenticated user
-            $cart = Cart::where('user_id', $userId)->first();
-
-            if (!$cart) {
-                // If the cart does not exist, create a new cart for the user
-                $cart = Cart::create(['user_id' => $userId]);
-            }
-
+            // Get or create the cart for the current user
+            $cart = Cart::firstOrCreate(['user_id' => $userId]);
             $cartId = $cart->id;
 
-            // Check if the product is already in the cart
-            $cartItem = CartItem::where('cart_id', $cartId)
-                                ->where('product_id', $request->product_id)
-                                ->first();
+            // Define customizations data
+            $customizations = [
+                [
+                    'type' => 'temperature',
+                    'value' => $request->temperature,
+                    'price' => 0
+                ],
+                [
+                    'type' => 'size',
+                    'value' => $request->size,
+                    'price' => $request->size == '22oz' ? 30 : 0
+                ],
+                [
+                    'type' => 'sweetness',
+                    'value' => $request->sweetness,
+                    'price' => 0
+                ],
+                [
+                    'type' => 'milk',
+                    'value' => $request->milk,
+                    'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0)
+                ]
+            ];
 
+            // Check if the product with the same customizations is already in the cart
+            $cartItem = CartItem::query()
+                ->where('cart_id', $cartId)
+                ->where('product_id', $request->product_id)
+                ->whereHas('customizations', function ($query) use ($customizations) {
+                    foreach ($customizations as $customization) {
+                        $query->where('type', $customization['type'])
+                              ->where('value', $customization['value']);
+                    }
+                })
+                ->first();
+
+            // If the product with the same customization is already in the cart, update the quantity
+            // dd($cartItem);
             if ($cartItem) {
-                // If the product is already in the cart, update the quantity
                 $cartItem->quantity += $request->quantity;
                 $cartItem->save();
             } else {
-                // Otherwise, create a new cart item
-                CartItem::create([
+                // If not, create a cart item
+                $cartItem = CartItem::create([
                     'cart_id' => $cartId,
                     'product_id' => $request->product_id,
-                    'quantity' => $request->quantity
+                    'quantity' => $request->quantity,
+                    'price' => $request->product_price
                 ]);
+
+                // Create customization records
+                foreach ($customizations as $customizationData) {
+                    $customization = Customization::firstOrCreate($customizationData);
+                    
+                    $cartItem->price += $customization->price; // Add customization price to cart item price
+                    $cartItem->customizations()->attach($customization->id); // Attach customization to cart item
+                }
+
+                $cartItem->save(); // Since we edit the cart item price, we save them after
+
             }
 
             // Commit the transaction
@@ -79,8 +114,11 @@ class CartController extends Controller
             // Rollback the transaction if there's an error
             DB::rollBack();
 
+            // Log the error for debugging purposes
+            Log::error('Error adding product to cart: ' . $e->getMessage());
+
             // Redirect back with an error message
-            return redirect()->back()->with('error', 'There was an issue adding the product to your cart. Please try again.');
+            return redirect()->back()->with('error', 'Failed to add product to cart. Please try again.');
         }
     }
 

@@ -15,12 +15,11 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class)->withTimestamps();
     }
-
-    public function orderItem()
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
-    public function cartItem()
+    public function cartItems()
     {
         return $this->hasMany(CartItem::class);
     }

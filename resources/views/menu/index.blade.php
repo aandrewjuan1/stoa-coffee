@@ -12,6 +12,12 @@
                 </div>
             </form> 
         </div>
+        @if(session('success'))
+            <div class="mb-3 flex bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Success! </strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($products as $product)
                 <div class="dark:bg-gray-800 bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 hover:shadow-lg">
