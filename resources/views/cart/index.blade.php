@@ -1,6 +1,6 @@
 <x-app-layout>
-    <div class="container mx-auto px-4 py-8">
-        <div class="bg-gray-800 text-white p-6 rounded-lg shadow-md">
+    <div class="flex justify-center my-8">
+        <div class="text-justify bg-gray-800 text-white p-6 rounded-lg shadow-md">
             <h1 class="text-2xl font-bold mb-6">Cart</h1>
             @if($cartItems->isEmpty())
                 <p class="text-gray-400 mb-4">Your cart is empty.</p>
@@ -13,9 +13,8 @@
                         <thead>
                             <tr>
                                 <th class="py-2 px-4">Product</th>
-                                <th class="py-2 px-4">Customizations</th>
+                                <th class="py-2 px-4">Price</th>
                                 <th class="py-2 px-4">Quantity</th>
-                                <th class="py-2 px-4">Total</th>
                                 <th class="py-2 px-4">Actions</th>
                             </tr>
                         </thead>
@@ -26,10 +25,18 @@
                                         <div>{{ $item->product->name }}</div>
                                         <div class="ml-4">
                                             @foreach ($item->customizations as $customization)
-                                                <div class="text-sm text-gray-400">{{ $customization->type }}: {{ $customization->value }}</div>
+                                                <div class="text-sm text-gray-400">
+                                                    {{ $customization->type }}:
+                                                    @foreach ($item->customizationItems as $customizationItem)
+                                                        @if ($customizationItem->customization_id == $customization->id)
+                                                            <span class="text-sm text-gray-500">{{ $customizationItem->value }}</span>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
                                             @endforeach
                                         </div>
                                     </td>
+                                    <td class="py-3 px-4">₱{{ $item->price * $item->quantity }}</td>
                                     <td class="py-3 px-4">
                                         <form action="{{ route('cart.update', $item->id) }}" method="POST">
                                             @csrf
@@ -38,7 +45,6 @@
                                             <button type="submit" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 ml-2">Update</button>
                                         </form>
                                     </td>
-                                    <td class="py-3 px-4">₱{{ $item->price * $item->quantity }}</td>
                                     <td class="py-3 px-4">
                                         <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                             @csrf

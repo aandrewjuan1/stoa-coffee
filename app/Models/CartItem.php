@@ -22,6 +22,12 @@ class CartItem extends Model
 
     public function customizations()
     {
-        return $this->belongsToMany(Customization::class)->withTimestamps();
+        return $this->belongsToMany(Customization::class)
+                    ->withTimestamps();
+    }
+    public function customizationItems()
+    {
+        return $this->belongsToMany(CustomizationItem::class)
+                    ->withTimestamps();
     }
 }

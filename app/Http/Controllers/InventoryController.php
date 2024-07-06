@@ -11,7 +11,7 @@ class InventoryController extends Controller
     {
         // Validate the search and category inputs
         $request->validate([
-            'query' => 'nullable|string|min:3',
+            'query' => 'nullable|string',
             'category' => 'nullable|integer|exists:categories,id' // Change validation to expect category ID
         ]);
 

@@ -34,8 +34,6 @@ class AddToCartRequest extends FormRequest
             'espresso.*' => 'in:decaf,add shot',
             'syrup' => 'nullable|array',
             'syrup.*' => 'in:add vanilla syrup,add caramel syrup,add hazelnut syrup,add salted caramel syrup',
-            'sauce' => 'nullable|array',
-            'sauce.*' => 'in:white mocha sauce,mocha sauce',
             'special_instructions' => 'nullable|string|max:255',
         ];
     }

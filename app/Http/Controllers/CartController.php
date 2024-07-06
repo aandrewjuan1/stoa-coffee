@@ -6,6 +6,7 @@ use App\Http\Requests\AddToCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Customization;
+use App\Models\CustomizationItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class CartController extends Controller
             $cartItems = collect();
         } else {
             // Fetch cart items for the authenticated user's cart
-            $cartItems = CartItem::where('cart_id', $cart->id)->with('customizations')->get();
+            $cartItems = CartItem::where('cart_id', $cart->id)->with('customizations', 'customizationItems')->get();
         }
 
         // Pass the cart items and cart ID to the view
@@ -43,8 +44,7 @@ class CartController extends Controller
             $cart = Cart::firstOrCreate(['user_id' => $userId]);
             $cartId = $cart->id;
 
-            // Define customizations data
-            $customizations = [
+            $customizationData = [
                 [
                     'type' => 'temperature',
                     'value' => $request->temperature,
@@ -64,45 +64,59 @@ class CartController extends Controller
                     'type' => 'milk',
                     'value' => $request->milk,
                     'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0)
-                ]
+                ],
+                // [
+                //     'type' => 'special_instructions',
+                //     'value' => $request->special_instructions,
+                //     'price' => 0
+                // ],
+                // [
+                //     'type' => 'espresso',
+                //     'value' => $request->espresso,
+                //     'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0
+                // ],                
+                // [
+                //     'type' => 'syrup',
+                //     'value' => $request->syrup,
+                //     'price' => 25
+                // ],
             ];
 
-            // Check if the product with the same customizations is already in the cart
-            $cartItem = CartItem::query()
-                ->where('cart_id', $cartId)
-                ->where('product_id', $request->product_id)
-                ->whereHas('customizations', function ($query) use ($customizations) {
-                    foreach ($customizations as $customization) {
-                        $query->where('type', $customization['type'])
-                              ->where('value', $customization['value']);
-                    }
-                })
-                ->first();
-
-            // If the product with the same customization is already in the cart, update the quantity
-            // dd($cartItem);
-            if ($cartItem) {
-                $cartItem->quantity += $request->quantity;
-                $cartItem->save();
-            } else {
-                // If not, create a cart item
+            $cartItem = null;
+            if($cartItem)
+            {
+                // Just add the quantity
+            } else 
+            {
+                // Create cart item
                 $cartItem = CartItem::create([
                     'cart_id' => $cartId,
                     'product_id' => $request->product_id,
                     'quantity' => $request->quantity,
-                    'price' => $request->product_price
+                    'price' => $request->product_price,
                 ]);
 
-                // Create customization records
-                foreach ($customizations as $customizationData) {
-                    $customization = Customization::firstOrCreate($customizationData);
-                    
-                    $cartItem->price += $customization->price; // Add customization price to cart item price
-                    $cartItem->customizations()->attach($customization->id); // Attach customization to cart item
+                foreach ($customizationData as $data) {
+                    // Find or create the customization record
+                    $customization = Customization::firstOrCreate(
+                        ['type' => $data['type']],
+                    );
+
+                    // Create customization item record
+                    $customizationItem = CustomizationItem::firstOrCreate([
+                        'customization_id' => $customization->id,
+                        'value' => $data['value'],
+                        'price' => $data['price'],
+                    ]);
+
+                    // Since cart item has many to many relationship with customizations, we will attach those 
+                    $cartItem->customizations()->attach($customization->id);
+                    $cartItem->customizationItems()->attach($customizationItem->id);
+
+                    // Update the price of each cart item based on the customizations
+                    $cartItem->price += $customizationItem->price;
+                    $cartItem->save();
                 }
-
-                $cartItem->save(); // Since we edit the cart item price, we save them after
-
             }
 
             // Commit the transaction

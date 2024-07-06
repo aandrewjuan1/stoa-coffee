@@ -11,6 +11,11 @@ class Customization extends Model
 
     protected $guarded = [];
 
+    public function customizationItems()
+    {
+        return $this->hasMany(CustomizationItem::class);
+    }
+
     public function setTypeAttribute($value)
     {
         $this->attributes['type'] = strtolower($value);

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customizations', function (Blueprint $table) {
+        Schema::create('customization_items', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->unique();
+            $table->foreignId('customization_id')->constrained()->onDelete('cascade');
+            $table->string('value');
+            $table->decimal('price', 8, 2)->default(0);
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customizations');
+        Schema::dropIfExists('customization_items');
     }
 };
