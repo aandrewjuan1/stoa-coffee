@@ -30,8 +30,7 @@ Follow these steps to set up the project locally:
 
 1. **Clone the Repository**
    ```sh
-   git clone https://github.com/username/repository.git
-   cd repository
+   git clone https://github.com/aandrewjuan1/stoa-coffee
 2. Install PHP Dependencies
     ```sh
     composer install
