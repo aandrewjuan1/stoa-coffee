@@ -47,13 +47,13 @@ Follow these steps to set up the project locally:
     ```sh
     php artisan key:generate
 6. Configure Database
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=your_database_name
-DB_USERNAME=your_database_username
-DB_PASSWORD=your_database_password
+    ```.env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=your_database_name
+    DB_USERNAME=your_database_username
+    DB_PASSWORD=your_database_password
 7. Run Migrations
     ```sh
     php artisan migrate
