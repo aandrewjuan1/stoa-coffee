@@ -65,29 +65,28 @@ class CartController extends Controller
                     'value' => $request->milk,
                     'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0)
                 ],
-                // [
-                //     'type' => 'special_instructions',
-                //     'value' => $request->special_instructions,
-                //     'price' => 0
-                // ],
-                // [
-                //     'type' => 'espresso',
-                //     'value' => $request->espresso,
-                //     'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0
-                // ],                
-                // [
-                //     'type' => 'syrup',
-                //     'value' => $request->syrup,
-                //     'price' => 25
-                // ],
+                [
+                    'type' => 'special_instructions',
+                    'value' => $request->special_instructions,
+                    'price' => 0
+                ],
+                [
+                    'type' => 'espresso',
+                    'value' => $request->espresso,
+                    'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0
+                ],                
+                [
+                    'type' => 'syrup',
+                    'value' => $request->syrup,
+                    'price' => 25
+                ],
             ];
 
             $cartItem = null;
             if($cartItem)
             {
                 // Just add the quantity
-            } else 
-            {
+            } else {
                 // Create cart item
                 $cartItem = CartItem::create([
                     'cart_id' => $cartId,
@@ -96,25 +95,46 @@ class CartController extends Controller
                     'price' => $request->product_price,
                 ]);
 
-                foreach ($customizationData as $data) {
+                foreach ($customizationData as $data) 
+                {
+                    // Skip the data if it has no value 
+                    if($data['value'] == null)
+                    {
+                        continue;
+                    } 
+
                     // Find or create the customization record
                     $customization = Customization::firstOrCreate(
-                        ['type' => $data['type']],
-                    );
-
-                    // Create customization item record
-                    $customizationItem = CustomizationItem::firstOrCreate([
-                        'customization_id' => $customization->id,
-                        'value' => $data['value'],
-                        'price' => $data['price'],
-                    ]);
-
-                    // Since cart item has many to many relationship with customizations, we will attach those 
+                        ['type' => $data['type']]);
                     $cartItem->customizations()->attach($customization->id);
-                    $cartItem->customizationItems()->attach($customizationItem->id);
 
-                    // Update the price of each cart item based on the customizations
-                    $cartItem->price += $customizationItem->price;
+                    // If the customization is an array we handle it differently
+                    if(is_array($data['value']))
+                    {
+                        $values = $data['value'];
+                        foreach($values as $value)
+                        {
+                            // Create customization item record
+                            $customizationItem = CustomizationItem::firstOrCreate([
+                                'customization_id' => $customization->id,
+                                'value' => $value,
+                                'price' => $data['price'],
+                            ]);
+
+                            $cartItem->price += $customizationItem->price;
+                            $cartItem->customizationItems()->attach($customizationItem->id);
+                        }
+                    } else {
+                        // Create customization item record
+                        $customizationItem = CustomizationItem::firstOrCreate([
+                            'customization_id' => $customization->id,
+                            'value' => $data['value'],
+                            'price' => $data['price'],
+                        ]);
+                        
+                        $cartItem->price += $customizationItem->price;
+                        $cartItem->customizationItems()->attach($customizationItem->id);
+                    }
                     $cartItem->save();
                 }
             }
