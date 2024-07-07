@@ -48,7 +48,7 @@
             {{-- Right side nav --}}
             @auth
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                @can('view', 'App\\Models\Cart')
+                @can('buyer')
                     <a href="{{ route('cart.index') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out me-4">
                         <i class="fas fa-shopping-cart"></i>
                     </a>

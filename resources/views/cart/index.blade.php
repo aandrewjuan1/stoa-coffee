@@ -26,7 +26,7 @@
                                         <div class="ml-4">
                                             @foreach ($item->customizations as $customization)
                                                 <div class="text-sm text-gray-400">
-                                                    {{ $customization->type }}:
+                                                    {{ str_replace('_', ' ', $customization->type) }}:
                                                     @foreach ($item->customizationItems as $customizationItem)
                                                         @if ($customizationItem->customization_id == $customization->id)
                                                             <span class="text-sm text-gray-500">{{ $customizationItem->value }}</span>
