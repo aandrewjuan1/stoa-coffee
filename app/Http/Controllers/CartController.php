@@ -92,33 +92,38 @@ class CartController extends Controller
 
             $cartItem = null;
 
-            // Check if the product with the same customizations is already in the cart
+            // Iterate to those products to check if it's already in the cart
             foreach ($cartItems as $item) {
 
-                $customizationItemsCount = $item->customizationItems()
-                    ->whereIn('value', array_column($customizationData, 'value'))
-                    ->count();
-
-                $customizationDataCount = 0;
-                foreach($customizationData as $customization){
+                // Put all the customization values from the request to an array
+                $customizationValues = [];
+                foreach ($customizationData as $customization) {
                     if($customization['value'] != null){
-                        $customizationDataCount += 1;
+                        if (is_array($customization['value'])) {
+                            $customizationValues = array_merge($customizationValues, $customization['value']);
+                        } else {
+                            $customizationValues[] = $customization['value'];
+                        }
                     }
                 }
 
-                if ($customizationItemsCount == $customizationDataCount) {
+                // Extract values from cart item's customization items values
+                $existingCustomizationValues = $item->customizationItems()->pluck('value')->toArray();
+
+                // Compare values
+                if (! array_diff($customizationValues, $existingCustomizationValues)) {
                     $cartItem = $item;
                     break;
                 }
             }
             
+            // If cart item with the same customization already exists, just increment the quantity
             if($cartItem)
             {   
-                $cartItem->quantity += 1;
+                $cartItem->increment('quantity');
                 $cartItem->save();
-                // Just add the quantity
             } else {
-                // Create cart item
+                // If not, create a new cart item
                 $cartItem = CartItem::create([
                     'cart_id' => $cartId,
                     'product_id' => $request->product_id,
@@ -126,6 +131,7 @@ class CartController extends Controller
                     'price' => $request->product_price,
                 ]);
 
+                // Create and attach each customizations
                 foreach ($customizationData as $data) {
                     if($data['value'] != null) 
                     {  
