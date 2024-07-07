@@ -10,7 +10,7 @@ class MenuController extends Controller
     //
     public function index(Request $request)
     {
-            // Validate the search and category inputs
+        // Validate the search and category inputs
         $request->validate([
             'query' => 'nullable|string|min:3',
             'category' => 'nullable|string|exists:categories,name'
@@ -23,7 +23,6 @@ class MenuController extends Controller
         if ($request->filled('query')) {
             $searchQuery = $request->input('query');
             $productsQuery->where('name', 'like', '%' . $searchQuery . '%')
-                    ->orWhere('description', 'like', '%' . $searchQuery . '%')
                     ->orWhereHas('categories', function ($query) use ($searchQuery) {
                         $query->where('name', 'like', '%' . $searchQuery . '%');
                     });

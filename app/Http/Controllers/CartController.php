@@ -33,7 +33,93 @@ class CartController extends Controller
         return view('cart.index', ['cartItems' => $cartItems, 'cart' => $cart]);
     }
 
-    public function add(AddToCartRequest $request)
+    private function extractCustomizationValues($customizations){
+        // Put all the customization values from the request to an array to avoid having nested array 
+        $customizationValues = [];
+        foreach ($customizations as $customization) {
+            if($customization['value'] != null){
+                if (is_array($customization['value'])) {
+                    $customizationValues = array_merge($customizationValues, $customization['value']);
+                } else {
+                    $customizationValues[] = $customization['value'];
+                }
+            }
+        }
+        return $customizationValues;
+    }
+
+    private function checkIfTheCartItemAlreadyExists($customizations, $cartId, $productId){
+
+        // Get all cart items with the same product
+        $cartItems = CartItem::query()
+        ->where('cart_id', $cartId)
+        ->where('product_id', $productId)
+        ->get();
+
+        // Get the customization values in request
+        $customizationValues = $this->extractCustomizationValues($customizations);
+
+        $cartItem = null;
+        // Iterate the cart items 
+        foreach ($cartItems as $item) {
+            // Get the customization items for the cart item
+            $existingCustomizationValues = $item->customizationItems()->pluck('value')->toArray();
+
+            // Compare the two customization items
+            if (! array_diff($customizationValues, $existingCustomizationValues)) {
+                $cartItem = $item;
+                break;
+            }
+        }
+
+        return $cartItem;
+    }
+
+    private function attachCustomizations($cartItem, $customizations){
+
+        // Create and attach each customizations
+        foreach ($customizations as $data) {
+            if($data['value'] != null) 
+            {  
+                // Find or create the customization record
+                $customization = Customization::firstOrCreate(
+                    ['type' => $data['type']]);
+                $cartItem->customizations()->attach($customization->id);
+
+                // If the customization value (ex. espresso and syrup) is an array we handle it differently
+                if(is_array($data['value'])) 
+                {
+                    $values = $data['value'];
+                    foreach($values as $value)
+                    {
+                        // Create customization item record
+                        $customizationItem = CustomizationItem::firstOrCreate([
+                            'customization_id' => $customization->id,
+                            'value' => $value,
+                            'price' => $data['price'],
+                        ]);
+
+                        $cartItem->price += $customizationItem->price;
+                        $cartItem->customizationItems()->attach($customizationItem->id);
+                    }
+                } 
+                else {
+                    // Create customization item record
+                    $customizationItem = CustomizationItem::firstOrCreate([
+                        'customization_id' => $customization->id,
+                        'value' => $data['value'],
+                        'price' => $data['price'],
+                    ]);
+                    
+                    $cartItem->price += $customizationItem->price;
+                    $cartItem->customizationItems()->attach($customizationItem->id);
+                }
+                $cartItem->save();
+            } 
+        }
+    }
+
+    public function addToCart(AddToCartRequest $request)
     {
         // Get the authenticated user ID
         $userId = Auth::id();
@@ -42,11 +128,8 @@ class CartController extends Controller
             // Start a database transaction
             DB::beginTransaction();
 
-            // Get or create the cart for the current user
-            $cart = Cart::firstOrCreate(['user_id' => $userId]);
-            $cartId = $cart->id;
-
-            $customizationData = [
+            // Get the customizations for the cart item
+            $customizations = [
                 [
                     'type' => 'temperature',
                     'value' => $request->temperature,
@@ -84,42 +167,16 @@ class CartController extends Controller
                 ],
             ];
 
-            // Get all cart items with the same product
-            $cartItems = CartItem::query()
-                ->where('cart_id', $cartId)
-                ->where('product_id', $request->product_id)
-                ->get();
+            // Get or create the cart for the current user so we can insert the cart items
+            $cart = Cart::firstOrCreate(['user_id' => $userId]);
+            $cartId = $cart->id;
 
-            $cartItem = null;
+            // Check if the cart item with the same customizations already exists in the cart
+            $cartItem = $this->checkIfTheCartItemAlreadyExists($customizations, $cartId, $request->product_id);
 
-            // Iterate to those products to check if it's already in the cart
-            foreach ($cartItems as $item) {
-
-                // Put all the customization values from the request to an array
-                $customizationValues = [];
-                foreach ($customizationData as $customization) {
-                    if($customization['value'] != null){
-                        if (is_array($customization['value'])) {
-                            $customizationValues = array_merge($customizationValues, $customization['value']);
-                        } else {
-                            $customizationValues[] = $customization['value'];
-                        }
-                    }
-                }
-
-                // Extract values from cart item's customization items values
-                $existingCustomizationValues = $item->customizationItems()->pluck('value')->toArray();
-
-                // Compare values
-                if (! array_diff($customizationValues, $existingCustomizationValues)) {
-                    $cartItem = $item;
-                    break;
-                }
-            }
-            
-            // If cart item with the same customization already exists, just increment the quantity
             if($cartItem)
             {   
+                // If yes, just increment the quantity
                 $cartItem->increment('quantity');
                 $cartItem->save();
             } else {
@@ -130,47 +187,9 @@ class CartController extends Controller
                     'quantity' => $request->quantity,
                     'price' => $request->product_price,
                 ]);
-
-                // Create and attach each customizations
-                foreach ($customizationData as $data) {
-                    if($data['value'] != null) 
-                    {  
-                        // Find or create the customization record
-                        $customization = Customization::firstOrCreate(
-                            ['type' => $data['type']]);
-                        $cartItem->customizations()->attach($customization->id);
-
-                        // If the customization is an array we handle it differently
-                        if(is_array($data['value'])) 
-                        {
-                            $values = $data['value'];
-                            foreach($values as $value)
-                            {
-                                // Create customization item record
-                                $customizationItem = CustomizationItem::firstOrCreate([
-                                    'customization_id' => $customization->id,
-                                    'value' => $value,
-                                    'price' => $data['price'],
-                                ]);
-
-                                $cartItem->price += $customizationItem->price;
-                                $cartItem->customizationItems()->attach($customizationItem->id);
-                            }
-                        } 
-                        else {
-                            // Create customization item record
-                            $customizationItem = CustomizationItem::firstOrCreate([
-                                'customization_id' => $customization->id,
-                                'value' => $data['value'],
-                                'price' => $data['price'],
-                            ]);
-                            
-                            $cartItem->price += $customizationItem->price;
-                            $cartItem->customizationItems()->attach($customizationItem->id);
-                        }
-                        $cartItem->save();
-                    } 
-                }
+                
+                // Attach the customizations in the cart item
+                $this->attachCustomizations($cartItem, $customizations);
             }
 
             // Commit the transaction
@@ -190,7 +209,7 @@ class CartController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, CartItem $cartItem)
     {
         // Validate the request
         $request->validate([
@@ -201,9 +220,6 @@ class CartController extends Controller
         DB::beginTransaction();
 
         try {
-            // Find the cart item by ID
-            $cartItem = CartItem::findOrFail($id);
-
             // Update the quantity
             $cartItem->quantity = $request->quantity;
             $cartItem->save();
