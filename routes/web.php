@@ -49,11 +49,12 @@ Route::middleware(['admin'])->group(function () {
         ->name('products.destroy');
 });
 
-// Cart
+// Cart (buyer)
 Route::middleware('auth')->group(function() {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::patch('/cart/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+    Route::get('/cart/edit/{cartItem}', [CartController::class, 'edit'])->name('cart.edit');
+    Route::put('/cart/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
 });
 

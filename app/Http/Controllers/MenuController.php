@@ -45,6 +45,6 @@ class MenuController extends Controller
 
     public function showProduct(Product $product)
     {
-        return view('products.show', ['product' => $product]);
+        return view('products.show', ['product' => $product->load('categories')]);
     }
 }

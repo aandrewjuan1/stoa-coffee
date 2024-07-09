@@ -2,7 +2,7 @@
     @if(session('error'))
         <div class="mb-3 flex bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <span class="block sm:inline">{{ session('error') }}</span>
-        </div>
+        </div>  
     @endif
     <div class="container mx-auto px-4 p-10 text-gray-900 dark:text-gray-200">
         <div class="max-w-4xl mx-auto bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
@@ -194,13 +194,16 @@
 
                                 
                                 <!-- Add to Cart Button -->
-                                @can('buyer')
-                                    <div class="flex mt-4 mb-4">
-                                        <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Add to Cart</button>
-                                    </div>
-                                @endcan
-
+                                <div class="flex mt-4 mb-4">
+                                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Add to Cart</button>
+                                </div>
                             </form>
+
+                            {{-- @guest                                
+                                <div class="flex mt-4 mb-4">
+                                    <a href="{{route('login')}}" class="flex justify-center w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Log In</a>
+                                </div>
+                            @endguest --}}
                         </div>
                     </div>
                 </div>

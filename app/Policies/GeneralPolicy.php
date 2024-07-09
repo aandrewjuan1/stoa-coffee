@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class GeneralPolicy
 {
@@ -19,5 +20,10 @@ class GeneralPolicy
     public function buyer(User $user)
     {
         return $user->buyer !== null;
+    }
+
+    public function guest()
+    {
+        return Auth::guest();
     }
 }

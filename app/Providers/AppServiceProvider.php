@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('admin', [GeneralPolicy::class, 'admin']);
         Gate::define('baristaOrAdmin', [GeneralPolicy::class, 'baristaOrAdmin']);
         Gate::define('buyer', [GeneralPolicy::class, 'buyer']);
+        Gate::define('guest', [GeneralPolicy::class, 'guest']);
     }
 }

@@ -209,22 +209,38 @@ class CartController extends Controller
         }
     }
 
+    public function edit(CartItem $cartItem){
+        // Get all customization values to check the boxes
+        $customizationValues = $cartItem->customizationItems->pluck('value')->toArray();
+
+        // Find the special instructions customization and its value
+        $specialInstructions = null;
+        $specialInstructionsId = $cartItem->customizations->where('type', 'special_instructions')->first();
+        
+        if ($specialInstructionsId) {
+            $specialInstructions = $cartItem->customizationItems->where('customization_id', $specialInstructionsId->id)->first();
+        }
+
+        return view('cart.edit', [
+            'cartItem' => $cartItem->load('product'), 
+            'customizationValues' => $customizationValues, 
+            'specialInstructions' => $specialInstructions ? $specialInstructions->value : null]);
+    }
+
     public function update(Request $request, CartItem $cartItem)
     {
         // Validate the request
         $request->validate([
-            'quantity' => 'required|integer|min:1'
+            
         ]);
+
+        dd('edit');
 
         // Start a database transaction
         DB::beginTransaction();
 
         try {
-            // Update the quantity
-            $cartItem->quantity = $request->quantity;
-            $cartItem->save();
-
-            // Commit the transaction
+            
             DB::commit();
 
             // Redirect back with a success message
