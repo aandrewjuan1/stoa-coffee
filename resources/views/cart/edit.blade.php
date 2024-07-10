@@ -1,6 +1,11 @@
 <x-app-layout>
     <div class="container mx-auto px-4 text-white">
-
+        @if(session('success'))
+            <div class="mb-3 flex bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Success! </strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
         <h1 class="text-center text-4xl font-bold my-8 text-white">Edit Cart</h1>
         <div class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <!-- Product Info -->
@@ -166,6 +171,14 @@
 
                             <div class="flex mt-4 mb-4">
                                 <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Update</button>
+                            </div>
+                        </form>
+                        
+                        <form action="{{ route('cart.remove', ['cartItem' => $cartItem ]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <div class="flex mt-4 mb-4">
+                                <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">Delete</button>
                             </div>
                         </form>
                     </div>

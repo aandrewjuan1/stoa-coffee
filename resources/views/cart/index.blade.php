@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex justify-center min-h-screen">
+    <div class="flex justify-center mx-auto">
         <div class="text-justify bg-gray-800 text-white p-6 mb-8 mt-8 rounded-lg shadow-md w-full max-w-5xl">
             <h1 class="text-2xl font-bold mb-6">Cart</h1>
 
@@ -28,11 +28,12 @@
                                             @foreach ($item->customizations as $customization)
                                                 <div class="text-sm text-gray-400">
                                                     {{ str_replace('_', ' ', $customization->type) }}:
-                                                    @foreach ($item->customizationItems as $customizationItem)
-                                                        @if ($customizationItem->customization_id == $customization->id)
-                                                            <span class="text-sm text-gray-500">{{ $customizationItem->value }}</span>
-                                                        @endif
-                                                    @endforeach
+                                                    <span class="text-sm text-gray-500">
+                                                        {{ $item->customizationItems
+                                                            ->where('customization_id', $customization->id)
+                                                            ->pluck('value')
+                                                            ->join(', ') }}
+                                                    </span>
                                                 </div>
                                             @endforeach
                                         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Customization;
@@ -77,6 +78,8 @@ class CartController extends Controller
 
     private function attachCustomizations($cartItem, $customizations){
 
+        $customizationItemIds = [];
+        $customizationIds = [];
         // Create and attach each customizations
         foreach ($customizations as $data) {
             if($data['value'] != null) 
@@ -84,7 +87,7 @@ class CartController extends Controller
                 // Find or create the customization record
                 $customization = Customization::firstOrCreate(
                     ['type' => $data['type']]);
-                $cartItem->customizations()->attach($customization->id);
+                $customizationIds[] = $customization->id;
 
                 // If the customization value (ex. espresso and syrup) is an array we handle it differently
                 if(is_array($data['value'])) 
@@ -98,9 +101,9 @@ class CartController extends Controller
                             'value' => $value,
                             'price' => $data['price'],
                         ]);
-
+                        
+                        $customizationItemIds[] = $customizationItem->id;
                         $cartItem->price += $customizationItem->price;
-                        $cartItem->customizationItems()->attach($customizationItem->id);
                     }
                 } 
                 else {
@@ -110,13 +113,19 @@ class CartController extends Controller
                         'value' => $data['value'],
                         'price' => $data['price'],
                     ]);
-                    
+
+                    $customizationItemIds[] = $customizationItem->id;
                     $cartItem->price += $customizationItem->price;
-                    $cartItem->customizationItems()->attach($customizationItem->id);
                 }
+
+                // Sync the customization items using IDs
+                
                 $cartItem->save();
             } 
+            
         }
+        $cartItem->customizations()->sync($customizationIds);
+        $cartItem->customizationItems()->sync($customizationItemIds);
     }
 
     public function addToCart(AddToCartRequest $request)
@@ -227,19 +236,53 @@ class CartController extends Controller
             'specialInstructions' => $specialInstructions ? $specialInstructions->value : null]);
     }
 
-    public function update(Request $request, CartItem $cartItem)
+    public function update(UpdateCartRequest $request, CartItem $cartItem)
     {
-        // Validate the request
-        $request->validate([
-            
-        ]);
+        $customizations = [
+            [
+                'type' => 'temperature',
+                'value' => $request->temperature,
+                'price' => 0
+            ],
+            [
+                'type' => 'size',
+                'value' => $request->size,
+                'price' => $request->size == '22oz' ? 30 : 0
+            ],
+            [
+                'type' => 'sweetness',
+                'value' => $request->sweetness,
+                'price' => 0
+            ],
+            [
+                'type' => 'milk',
+                'value' => $request->milk,
+                'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0)
+            ],
+            [
+                'type' => 'espresso',
+                'value' => $request->espresso,
+                'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0
+            ],                
+            [
+                'type' => 'syrup',
+                'value' => $request->syrup,
+                'price' => 25
+            ],
+            [
+                'type' => 'special_instructions',
+                'value' => $request->special_instructions,
+                'price' => 0
+            ],
+        ];
 
-        dd('edit');
-
+        
         // Start a database transaction
         DB::beginTransaction();
 
         try {
+
+            $this->attachCustomizations($cartItem, $customizations);
             
             DB::commit();
 
@@ -248,6 +291,10 @@ class CartController extends Controller
         } catch (\Exception $e) {
             // Rollback the transaction if there's an error
             DB::rollBack();
+
+            // Log the error for debugging purposes
+            Log::error('Error adding product to cart: ' . $e->getMessage());
+
 
             // Redirect back with an error message
             return redirect()->back()->with('error', 'There was an issue updating your cart. Please try again.');
