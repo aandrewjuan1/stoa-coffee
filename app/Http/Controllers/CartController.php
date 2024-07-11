@@ -76,10 +76,12 @@ class CartController extends Controller
         return $cartItem;
     }
 
-    private function attachCustomizations($cartItem, $customizations){
+    private function syncCustomizations($cartItem, $customizations){
 
         $customizationItemIds = [];
         $customizationIds = [];
+        $customizationPrices = 0; 
+
         // Create and attach each customizations
         foreach ($customizations as $data) {
             if($data['value'] != null) 
@@ -103,7 +105,8 @@ class CartController extends Controller
                         ]);
                         
                         $customizationItemIds[] = $customizationItem->id;
-                        $cartItem->price += $customizationItem->price;
+                        $customizationPrices += $customizationItem->price;
+                        
                     }
                 } 
                 else {
@@ -115,15 +118,15 @@ class CartController extends Controller
                     ]);
 
                     $customizationItemIds[] = $customizationItem->id;
-                    $cartItem->price += $customizationItem->price;
-                }
+                    $customizationPrices += $customizationItem->price;
 
-                // Sync the customization items using IDs
-                
-                $cartItem->save();
+                }
             } 
-            
         }
+
+        $cartItem->price = $customizationPrices + $cartItem->product->price; 
+        $cartItem->save();  
+
         $cartItem->customizations()->sync($customizationIds);
         $cartItem->customizationItems()->sync($customizationItemIds);
     }
@@ -198,7 +201,7 @@ class CartController extends Controller
                 ]);
                 
                 // Attach the customizations in the cart item
-                $this->attachCustomizations($cartItem, $customizations);
+                $this->syncCustomizations($cartItem, $customizations);
             }
 
             // Commit the transaction
@@ -282,7 +285,7 @@ class CartController extends Controller
 
         try {
 
-            $this->attachCustomizations($cartItem, $customizations);
+            $this->syncCustomizations($cartItem, $customizations);
             
             DB::commit();
 
