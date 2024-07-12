@@ -15,7 +15,7 @@
         @if(session('success'))
             <div class="mb-3 flex bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                 <strong class="font-bold">Success! </strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
+                <span class="block sm:inline ml-1">{{ session('success') }}</span>
             </div>
         @endif
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

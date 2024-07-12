@@ -169,17 +169,16 @@
                                 <textarea id="special_instructions" name="special_instructions" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300">{{ $specialInstructions ?? '' }}</textarea>
                             </div>
 
-                            <div class="flex mt-4 mb-4">
-                                <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Update</button>
+                            <div class="flex justify-between space-x-3">
+                                <a href="{{ route('cart.index') }}" class="text-center bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 w-1/2">Back</a>
+                                <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 w-1/2">Update</button>
                             </div>
                         </form>
                         
                         <form action="{{ route('cart.remove', ['cartItem' => $cartItem ]) }}" method="POST">
-                            @csrf
+                                @csrf
                             @method('DELETE')
-                            <div class="flex mt-4 mb-4">
-                                <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">Delete</button>
-                            </div>
+                            <button type="submit" class="bg-red-600/55 text-white py-2 px-4 rounded hover:bg-red-800 w-full">Delete Item</button>
                         </form>
                     </div>
                 </div>

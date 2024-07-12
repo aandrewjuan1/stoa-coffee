@@ -58,9 +58,9 @@
                     <x-text-input type="file" name="image" id="image" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:shadow-outline"></x-text-input> 
                 </div>
 
-                <div class="flex justify-between">
-                    <a href="{{ route('inventory.index') }}" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Back</a>
-                    <button type="submit" class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">Update Product</button>
+                <div class="flex justify-between space-x-3">
+                    <a href="{{ route('inventory.index') }}" class="text-center bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 w-1/2">Back</a>
+                    <button type="submit" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 w-1/2">Update Product</button>
                 </div>
             </form>
             <form action="{{ route('products.destroy', $product->name) }}" method="POST" class="mt-4">

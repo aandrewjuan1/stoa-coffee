@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddToCartRequest;
 use App\Http\Requests\UpdateCartRequest;
+use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Customization;
 use App\Models\CustomizationItem;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -290,7 +290,7 @@ class CartController extends Controller
             DB::commit();
 
             // Redirect back with a success message
-            return redirect()->back()->with('success', 'Cart updated successfully!');
+            return to_route('cart.index')->with('success', 'Cart updated successfully!');
         } catch (\Exception $e) {
             // Rollback the transaction if there's an error
             DB::rollBack();
@@ -325,5 +325,17 @@ class CartController extends Controller
             // Redirect back with an error message
             return redirect()->back()->with('error', 'There was an issue removing the product from your cart. Please try again.');
         }
+    }
+
+    public function addQuantity(Request $request, CartItem $cartItem)
+    {
+        $request->validate([
+            'quantity' => 'required|integer', // Adjust validation as needed
+        ]); 
+
+        $cartItem->quantity = $request->input('quantity');
+        $cartItem->save();
+
+        return back();
     }
 }
