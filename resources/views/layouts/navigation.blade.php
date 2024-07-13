@@ -1,4 +1,5 @@
 <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+    @livewireScripts()
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">            
         <div class="flex justify-between h-16">
@@ -41,10 +42,9 @@
                         {{ __('Register') }}
                     </x-nav-link>
                 </div>
-                @include('components.dark-mode-toggle')
             </div>
             @endguest
-
+            
             {{-- Right side nav --}}
             @auth
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -89,7 +89,6 @@
                         </form>
                     </x-slot>
                 </x-dropdown>
-                @include('components.dark-mode-toggle')
             </div>
             @endauth
             

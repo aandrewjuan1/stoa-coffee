@@ -17,7 +17,7 @@
         
     </head>
     <body x-data="{ open: false, darkMode: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches) }" :class="{ 'dark': darkMode }">
-        <div class="min-h-screen font-sans antialiased bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen font-sans antialiased dark:bg-gray-900">
             
             @include('layouts.navigation')
             <main>
