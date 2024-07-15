@@ -12,14 +12,25 @@
                             <th class="py-3 px-4 border-b border-gray-600">Product</th>
                             <th class="py-3 px-4 border-b border-gray-600">Quantity</th>
                             <th class="py-3 px-4 border-b border-gray-600">Price</th>
+                            <th class="py-3 px-4 border-b border-gray-600">Customizations</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($order->orderItems as $item)
-                            <tr class="border-b border-gray-700">
+                            <tr class="text-center border-b border-gray-700">
                                 <td class="py-3 px-4">{{ $item->product->name }}</td>
                                 <td class="py-3 px-4">{{ $item->quantity }}</td>
-                                <td class="py-3 px-4">₱{{ $item->price * $item->quantity }}</td>
+                                <td class="py-3 px-4">₱{{ $item->price }}</td>
+                                <td class="py-3 px-4">
+                                    @foreach ($item->customizations as $customization)
+                                        <div class="text-sm text-gray-400">
+                                            {{ str_replace('_', ' ', $customization->type) }}:
+                                            <span class="text-sm text-gray-500">
+                                                {{ $item->customizationItems->where('customization_id', $customization->id)->pluck('value')->join(', ') }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

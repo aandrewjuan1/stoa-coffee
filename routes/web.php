@@ -49,12 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart/edit/{cartItem}', [CartController::class, 'edit'])->name('cart.edit');
     Route::put('/cart/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::patch('/cart/update/{cartItem}', [CartController::class, 'changequantity'])->name('cart.changeQuantity');
-    Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
 // Orders (buyer)
 Route::middleware('auth')->group(function () {
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}/success', [OrderController::class, 'showOrderSuccess'])
         ->can('view', 'order')
         ->name('orders.success');

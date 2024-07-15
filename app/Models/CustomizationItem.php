@@ -20,4 +20,8 @@ class CustomizationItem extends Model
     {
         return $this->belongsToMany(CartItem::class)->withTimestamps();
     }
+    public function orderItems()
+    {
+        return $this->belongsToMany(OrderItem::class)->withTimestamps();
+    }
 }
