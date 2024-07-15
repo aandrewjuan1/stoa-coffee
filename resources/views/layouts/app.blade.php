@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         
     </head>
-    <body x-data="{ open: false, darkMode: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches) }" :class="{ 'dark': darkMode }">
+    <body x-data="{ open: false }"
         <div class="min-h-screen font-sans antialiased dark:bg-gray-900">
             
             @include('layouts.navigation')
