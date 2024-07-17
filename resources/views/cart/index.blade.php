@@ -1,4 +1,4 @@
-<div class="flex justify-center mx-auto">
+<div class="flex justify-center mx-20">
     <div class="text-justify bg-gray-800 text-white p-6 mb-8 mt-8 rounded-lg shadow-md w-full max-w-5xl">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold mb-6">Cart</h1>

@@ -17,7 +17,7 @@
         
     </head>
     <body x-data="{ open: false }"
-        <div class="min-h-screen font-sans antialiased dark:bg-gray-900">
+        <div class="min-h-screen font-sans antialiased bg-gray-900">
             
             @include('layouts.navigation')
             <main>

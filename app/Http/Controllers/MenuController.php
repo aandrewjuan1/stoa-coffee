@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Contracts\View\View;
 
 class MenuController extends Controller
 {
     //
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         // Validate the search and category inputs
         $request->validate([
@@ -37,7 +38,7 @@ class MenuController extends Controller
         }
 
         // Paginate the results
-        $products = $productsQuery->with('categories')->paginate(6);
+        $products = $productsQuery->with('categories')->paginate(8);
 
         return view('menu.index', ['products' => $products]);
     }

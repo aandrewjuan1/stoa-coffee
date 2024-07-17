@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\OrderPlaced;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CartItem;
 use App\Models\Cart as CartModel;
@@ -10,14 +11,17 @@ use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Cart extends Component
 {
-    public $selectedItems;
-    protected $cart;
-    protected $cartItems;
-
     #[Validate(['selectedItems' => 'required|array', 'selectedItems.*' => 'exists:cart_items,id'])]
+    public array $selectedItems;
+    protected CartModel $cart;
+    protected Collection $cartItems;
+    public float $totalPrice;
+
     public function mount()
     {
         $this->loadCart();
@@ -32,7 +36,7 @@ class Cart extends Component
         ]);
     }
 
-    private function loadCart()
+    private function loadCart(): void
     {
         $this->cart = CartModel::firstWhere('user_id', Auth::id());
 
@@ -43,17 +47,17 @@ class Cart extends Component
             : collect();
     }
 
-    private function setSelectedItems()
+    private function setSelectedItems(): void
     {
         $this->selectedItems = $this->cartItems->where('is_checked', true)->pluck('id')->toArray();
     }
 
-    private function calculateTotalPrice()
+    private function calculateTotalPrice($cartItems): float
     {
-        return $this->cartItems->sum(fn($item) => $item->price * $item->quantity);
+        return $cartItems->sum(fn($item) => $item->price * $item->quantity);
     }
 
-    public function incrementQuantity(CartItem $cartItem)
+    public function incrementQuantity(CartItem $cartItem): void
     {
         if ($cartItem->quantity < 99) {
             $cartItem->increment('quantity');
@@ -61,7 +65,7 @@ class Cart extends Component
         $this->loadCart();
     }
 
-    public function decrementQuantity(CartItem $cartItem)
+    public function decrementQuantity(CartItem $cartItem): void
     {
         if ($cartItem->quantity > 1) {
             $cartItem->decrement('quantity');
@@ -69,7 +73,7 @@ class Cart extends Component
         $this->loadCart();
     }
 
-    public function deleteItems()
+    public function deleteItems(): void
     {
         if ($this->selectedItems) {
             CartItem::whereIn('id', $this->selectedItems)->delete();
@@ -81,32 +85,31 @@ class Cart extends Component
         $this->redirect(Cart::class, navigate: true);
     }
 
-    public function toggleChecked(CartItem $cartItem)
+    public function toggleChecked(CartItem $cartItem): void
     {
-        $cartItem->is_checked = !$cartItem->is_checked; // Toggle the state
+        $cartItem->is_checked = !$cartItem->is_checked; 
 
-        // Save the updated state
         $cartItem->save();
         $this->loadCart();
         $this->setSelectedItems();
     }
 
-    public function checkout()
+    public function checkout(): void
     {
         if ($this->selectedItems) {
             $this->validate();
 
-            $this->cartItems = CartItem::whereIn('id', $this->selectedItems)->get();
+            $cartItems = CartItem::whereIn('id', $this->selectedItems)->get();
 
             try {
                 DB::beginTransaction();
 
                 $order = Order::create([
                     'user_id' => Auth::id(),
-                    'total_price' => $this->calculateTotalPrice(),
+                    'total_price' => $this->calculateTotalPrice($cartItems),
                 ]);
 
-                $this->cartItems->each(function ($cartItem) use ($order) {
+                $cartItems->each(function ($cartItem) use ($order) {
                     $orderItem = OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $cartItem->product_id,
@@ -120,13 +123,16 @@ class Cart extends Component
                 });
 
                 DB::commit();
+
+                OrderPlaced::dispatch($order);
                 session()->flash('checkout-success', 'Order placed successfully!');
-            } catch (\Exception $e) {
+                $this->redirect(route('orders.success', ['order' => $order->load('orderItems.customizations', 'orderItems.customizationItems')]), navigate: true);
+            } catch (\Exception $exception) {
                 DB::rollBack();
                 session()->flash('checkout-error', 'There was an error processing your order. Please try again.');
+                Log::info($exception);
+                $this->redirect(Cart::class, navigate: true);
             }
-            // $this->redirect(Cart::class, navigate: true);
-            return redirect()->route('orders.success', ['order' => $order->load('orderItems.customizations', 'orderItems.customizationItems')]);
         } else {
             session()->flash('empty-selected-items', 'Select items');
             $this->redirect(Cart::class, navigate: true);

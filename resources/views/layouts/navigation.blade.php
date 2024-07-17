@@ -1,7 +1,7 @@
-<nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav class="mx-20 border-b border-gray-300 ">
     @livewireScripts()
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <!-- Logo -->
             <div class="flex items-center">
@@ -11,23 +11,23 @@
                 </a>
             </div>
 
-            <div class="flex items-center">
+            <div class="flex items-center gap-1">
 
-                <div class="hidden space-x-8 sm:-my-px sm:flex">
+                <div class="hidden md:flex">
                     <x-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')"
-                        class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        class="text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
                         {{ __('Menu') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:flex">
+                <div class="hidden md:flex">
                     <x-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')"
-                        class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        class="text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
                         {{ __('About Us') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:flex">
+                <div class="hidden md:flex">
                     <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
-                        class="text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
+                        class="text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out">
                         {{ __('Contact') }}
                     </x-nav-link>
                 </div>
@@ -50,7 +50,7 @@
 
             {{-- Right side nav --}}
             @auth
-                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="hidden md:flex md:items-center md:ml-6">
                     @can('buyer')
                         <a href="{{ route('cart.index') }}"
                             class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-150 ease-in-out me-4">
@@ -102,7 +102,7 @@
 
 
             <!-- Hamburger Menu -->
-            <div class="-mr-2 flex items-center sm:hidden">
+            <div class="-mr-2 flex items-center md:hidden">
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden md:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')" class="text-gray-900 dark:text-gray-200">
                 {{ __('Menu') }}
@@ -158,6 +158,9 @@
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-900 dark:text-gray-200">
                         {{ __('Profile') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('cart.index')" class="text-gray-900 dark:text-gray-200">
+                        {{ __('Cart') }}
                     </x-responsive-nav-link>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
