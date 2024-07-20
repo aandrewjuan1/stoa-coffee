@@ -150,6 +150,7 @@ class CartController extends Controller
         $userId = Auth::id();
 
         try {
+
             // Start a database transaction
             DB::beginTransaction();
 

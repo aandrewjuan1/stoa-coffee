@@ -10,6 +10,11 @@
         <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
             class="flex my-5 text-lg text-green-500">{{ session('success') }}</p>
     @endif
+    @if ($errors->any())
+        <div class="mb-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            {{ 'error ka sa products form'}}
+        </div>
+    @endif
     <div class="grid mx-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         @foreach ($products as $product)
             <div wire:key="{{ $product->id }}"

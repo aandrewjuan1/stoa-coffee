@@ -22,10 +22,9 @@ class AddToCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
-            'product_price' => 'required',
+            'product_price' => 'required|numeric',
             'temperature' => 'required|in:hot,iced',
             'size' => 'required|in:16oz,22oz',
             'sweetness' => 'required|in:not sweet,less sweet,regular sweetness',

@@ -41,20 +41,20 @@
 
                     <!-- Choice of Temperature -->
                     <x-radio-button-customization-card label="Choice of Temperature" name="temperature"
-                        :options="['hot' => 'Hot', 'iced' => 'Iced']" :selected="$product->temperature" required="true" />
+                        :options="['hot' => 'Hot', 'iced' => 'Iced']" :selected="$product->temperature" :required="true" />
 
                     <!-- Choice of Size -->
                     <x-radio-button-customization-card label="Choice of Size" name="size" :options="[
                         '16oz' => '16 Oz - Default',
                         '22oz' => '22 Oz - ₱30',
-                    ]" :selected="$product->size" required="true" />
+                    ]" :selected="$product->size" :required="true" />
 
                     <!-- Sweetness -->
                     <x-radio-button-customization-card label="Sweetness" name="sweetness" :options="[
                         'not sweet' => 'Not Sweet',
                         'less sweet' => 'Less Sweet',
                         'regular sweetness' => 'Regular sweetness',
-                    ]" :selected="$product->sweetness" required="true" />
+                    ]" :selected="$product->sweetness" :required="true" />
 
                     <!-- Choice of Milk -->
                     <x-radio-button-customization-card label="Choice of Milk" name="milk" :options="[
@@ -62,13 +62,13 @@
                         'non-fat milk' => 'Non-fat',
                         'sub soymilk' => 'Sub Soymilk - ₱35',
                         'sub coconutmilk' => 'Sub Coconutmilk - ₱35',
-                    ]" :selected="$product->milk" required="true" />
+                    ]" :selected="$product->milk" :required="true" />
 
                     <!-- Choice of Espresso -->
                     <x-checkbox-customization-card label="Choice of Espresso" name="espresso" :options="[
                         'decaf' => 'Decaf - Free',
                         'add shot' => 'Add Espresso shot - ₱40',
-                    ]" required="false" />
+                    ]" :required="false" />
 
                     <!-- Add Syrup -->
                     <x-checkbox-customization-card label="Add Syrup" name="syrup" :options="[
@@ -76,7 +76,7 @@
                         'add caramel syrup' => 'Add Caramel Syrup - ₱25',
                         'add hazelnut syrup' => 'Add Hazelnut Syrup - ₱25',
                         'add salted caramel syrup' => 'Add Salted Caramel Syrup - ₱25',
-                    ]" :selected="old('syrup', $product->syrup)" />
+                    ]" :required="false"/>
 
                     <!-- Special Instructions -->
                     <div class="mb-4">

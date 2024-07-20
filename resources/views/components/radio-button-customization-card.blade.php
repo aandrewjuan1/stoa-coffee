@@ -4,13 +4,13 @@
     </label>
     <x-input-error :messages="$errors->get($name)" class="mt-2" />
     <div class="mt-2 space-y-2">
-        @foreach($options as $value => $label)
+        @foreach($options as $value => $optionLabel)
             <div class="flex items-center">
-                <input type="checkbox" id="{{ $value }}" name="{{ $name }}[]" value="{{ $value }}"
+                <input type="radio" id="{{ $value }}" name="{{ $name }}" value="{{ $value }}"
                     class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded dark:text-gray-400 dark:border-gray-700 dark:bg-gray-800"
-                    @if (is_array(old($name)) && in_array($value, old($name))) checked @endif>
+                    @if (old($name) == $value) checked @endif>
                 <label for="{{ $value }}"
-                    class="ml-2 block text-sm text-gray-900 dark:text-gray-300">{{ $label }}</label>
+                    class="ml-2 block text-sm text-gray-900 dark:text-gray-300">{{ $optionLabel }}</label>
             </div>
         @endforeach
     </div>
