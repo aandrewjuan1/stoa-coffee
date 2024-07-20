@@ -24,13 +24,9 @@ class Cart extends Component
     protected Collection $cartItems;
     public float $totalPrice = 0;
 
-    public function mount()
-    {
-        $this->loadCart();
-    }
-
     public function render()
     {
+        $this->loadCart();
         return view('cart.index', [
             'cartItems' => $this->cartItems,
             'cart' => $this->cart,
@@ -39,7 +35,9 @@ class Cart extends Component
 
     protected function loadCart(): void
     {
-        $this->cart = CartModel::firstWhere('user_id', Auth::id());
+        $this->cart = CartModel::firstOrCreate([
+            'user_id' => Auth::id()
+        ]);
 
         $this->cartItems = $this->cart
             ? CartItem::with('customizations', 'customizationItems')
@@ -66,7 +64,6 @@ class Cart extends Component
         if ($cartItem->quantity < 99) {
             $cartItem->increment('quantity');
         }
-        $this->loadCart();
     }
 
     public function decrementQuantity(CartItem $cartItem): void
@@ -74,7 +71,6 @@ class Cart extends Component
         if ($cartItem->quantity > 1) {
             $cartItem->decrement('quantity');
         }
-        $this->loadCart();
     }
 
     public function deleteItems(): void
@@ -95,7 +91,6 @@ class Cart extends Component
     protected function setShowMessageEvent(string $message): void
     {
         $this->dispatch('show-message', $message);
-        $this->loadCart();
     }
 
     public function toggleChecked(CartItem $cartItem): void
@@ -103,7 +98,6 @@ class Cart extends Component
         $cartItem->is_checked = !$cartItem->is_checked;
 
         $cartItem->save();
-        $this->loadCart();
     }
 
     public function checkout(): void

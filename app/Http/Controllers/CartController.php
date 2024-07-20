@@ -55,7 +55,7 @@ class CartController extends Controller
         return $cartItem;
     }
 
-    private function syncCustomizations($cartItem, $customizations)
+    private function syncCustomizations(CartItem $cartItem, array $customizations): void
     {
         $customizationItemIds = [];
         $customizationIds = [];
@@ -103,6 +103,47 @@ class CartController extends Controller
         $cartItem->customizationItems()->sync($customizationItemIds);
     }
 
+    protected function setcustomizations(Request $request): array
+    {
+        return [
+            [
+                'type' => 'temperature',
+                'value' => $request->temperature,
+                'price' => 0,
+            ],
+            [
+                'type' => 'size',
+                'value' => $request->size,
+                'price' => $request->size == '22oz' ? 30 : 0,
+            ],
+            [
+                'type' => 'sweetness',
+                'value' => $request->sweetness,
+                'price' => 0,
+            ],
+            [
+                'type' => 'milk',
+                'value' => $request->milk,
+                'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0),
+            ],
+            [
+                'type' => 'espresso',
+                'value' => $request->espresso,
+                'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0,
+            ],
+            [
+                'type' => 'syrup',
+                'value' => $request->syrup,
+                'price' => 25,
+            ],
+            [
+                'type' => 'special_instructions',
+                'value' => $request->special_instructions,
+                'price' => 0,
+            ],
+        ];
+    }
+
     public function addToCart(AddToCartRequest $request)
     {
         // Get the authenticated user ID
@@ -113,43 +154,7 @@ class CartController extends Controller
             DB::beginTransaction();
 
             // Get the customizations for the cart item
-            $customizations = [
-                [
-                    'type' => 'temperature',
-                    'value' => $request->temperature,
-                    'price' => 0,
-                ],
-                [
-                    'type' => 'size',
-                    'value' => $request->size,
-                    'price' => $request->size == '22oz' ? 30 : 0,
-                ],
-                [
-                    'type' => 'sweetness',
-                    'value' => $request->sweetness,
-                    'price' => 0,
-                ],
-                [
-                    'type' => 'milk',
-                    'value' => $request->milk,
-                    'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0),
-                ],
-                [
-                    'type' => 'espresso',
-                    'value' => $request->espresso,
-                    'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0,
-                ],
-                [
-                    'type' => 'syrup',
-                    'value' => $request->syrup,
-                    'price' => 25,
-                ],
-                [
-                    'type' => 'special_instructions',
-                    'value' => $request->special_instructions,
-                    'price' => 0,
-                ],
-            ];
+            $customizations = $this->setcustomizations($request);
 
             // Get or create the cart for the current user so we can insert the cart items
             $cart = Cart::firstOrCreate(['user_id' => $userId]);
@@ -214,43 +219,8 @@ class CartController extends Controller
 
     public function update(UpdateCartRequest $request, CartItem $cartItem)
     {
-        $customizations = [
-            [
-                'type' => 'temperature',
-                'value' => $request->temperature,
-                'price' => 0,
-            ],
-            [
-                'type' => 'size',
-                'value' => $request->size,
-                'price' => $request->size == '22oz' ? 30 : 0,
-            ],
-            [
-                'type' => 'sweetness',
-                'value' => $request->sweetness,
-                'price' => 0,
-            ],
-            [
-                'type' => 'milk',
-                'value' => $request->milk,
-                'price' => $request->milk === 'sub soymilk' ? 35 : ($request->milk === 'sub coconutmilk' ? 45 : 0),
-            ],
-            [
-                'type' => 'espresso',
-                'value' => $request->espresso,
-                'price' => is_array($request->espresso) && in_array('add shot', $request->espresso) ? 40 : 0,
-            ],
-            [
-                'type' => 'syrup',
-                'value' => $request->syrup,
-                'price' => 25,
-            ],
-            [
-                'type' => 'special_instructions',
-                'value' => $request->special_instructions,
-                'price' => 0,
-            ],
-        ];
+        // Get the customizations for the cart item
+        $customizations = $this->setcustomizations($request);
 
         // Start a database transaction
         DB::beginTransaction();

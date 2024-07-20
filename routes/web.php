@@ -9,6 +9,7 @@ use App\Livewire\Cart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Livewire\Menu;
 
 // Navigation
 Route::view('/', 'home')->name('home');
@@ -23,7 +24,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Menu
-Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+Route::get('/menu', Menu::class)->name('menu.index')->lazy();
 Route::get('/menu/{product:name}', [MenuController::class, 'showProduct'])->name('menu.showProduct');
 
 // Inventory, Categories, and Products (admin)
