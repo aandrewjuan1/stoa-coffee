@@ -35,4 +35,9 @@ class Customization extends Model
     {
         return $this->belongsToMany(CartItem::class)->withTimestamps();
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class)->withTimestamps();
+    }
 }

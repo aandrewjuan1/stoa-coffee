@@ -1,7 +1,8 @@
 <div class="container mx-auto px-4 p-10 text-gray-200">
     @if ($product)
         @if (session('error'))
-            <div class="mb-3 flex bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <div class="mb-3 flex bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert">
                 <span class="block sm:inline">{{ session('error') }}</span>
             </div>
         @endif
@@ -10,13 +11,14 @@
             <div class=" bg-gray-800 z-10 p-4">
                 <h1 class="text-4xl font-bold text-gray-200">{{ $product->name }}</h1>
             </div>
-            
+
             <!-- Product Image -->
             <div>
                 @if (str_starts_with($product->image, 'http'))
                     <img src="{{ $product->image }}" class="w-full h-auto object-cover" alt="{{ $product->name }}">
                 @else
-                    <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-auto object-cover" alt="{{ $product->name }}">
+                    <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-auto object-cover"
+                        alt="{{ $product->name }}">
                 @endif
             </div>
 
@@ -24,7 +26,8 @@
             <div class="p-4 space-y-4">
                 <div class="space-x-2 mb-4">
                     @foreach ($product->categories as $category)
-                        <a href="{{ route('menu.index', ['category' => $category->name]) }}" class="bg-gray-200 text-gray-800 rounded-full px-2 py-1">
+                        <a href="{{ route('menu.index', ['category' => $category->name]) }}"
+                            class="bg-gray-200 text-gray-800 rounded-full px-2 py-1">
                             {{ $category->name }}
                         </a>
                     @endforeach
@@ -33,60 +36,61 @@
                 <p class="text-2xl font-bold text-gray-300 mb-4">₱{{ $product->price }}</p>
 
                 <!-- Customizations -->
-                <form action="{{ route('cart.add') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <input type="hidden" name="product_price" value="{{ $product->price }}">
+                <div>
+                    <form wire:submit="addTocart">
 
-                    <!-- Choice of Temperature -->
-                    <x-radio-button-customization-card label="Choice of Temperature" name="temperature"
-                        :options="['hot' => 'Hot', 'iced' => 'Iced']" :selected="$product->temperature" :required="true" />
+                        <x-radio-button-customization-card label="Temperature:" name="form.temperature"
+                            :options="[
+                                'hot' => 'Hot',
+                                'iced' => 'Iced',
+                            ]" :required="true" />
 
-                    <!-- Choice of Size -->
-                    <x-radio-button-customization-card label="Choice of Size" name="size" :options="[
-                        '16oz' => '16 Oz - Default',
-                        '22oz' => '22 Oz - ₱30',
-                    ]" :selected="$product->size" :required="true" />
+                        <x-radio-button-customization-card label="Size:" name="form.size" :options="[
+                            '16oz' => '16oz',
+                            '22oz' => '22oz',
+                        ]"
+                            :required="true" />
 
-                    <!-- Sweetness -->
-                    <x-radio-button-customization-card label="Sweetness" name="sweetness" :options="[
-                        'not sweet' => 'Not Sweet',
-                        'less sweet' => 'Less Sweet',
-                        'regular sweetness' => 'Regular sweetness',
-                    ]" :selected="$product->sweetness" :required="true" />
+                        <x-radio-button-customization-card label="Sweetness:" name="form.sweetness" :options="[
+                            'not sweet' => 'Not Sweet',
+                            'less sweet' => 'Less Sweet',
+                            'regular sweetness' => 'Regular Sweetness',
+                        ]"
+                            :required="true" />
 
-                    <!-- Choice of Milk -->
-                    <x-radio-button-customization-card label="Choice of Milk" name="milk" :options="[
-                        'whole milk' => 'Whole',
-                        'non-fat milk' => 'Non-fat',
-                        'sub soymilk' => 'Sub Soymilk - ₱35',
-                        'sub coconutmilk' => 'Sub Coconutmilk - ₱35',
-                    ]" :selected="$product->milk" :required="true" />
+                        <x-radio-button-customization-card label="Milk:" name="form.milk" :options="[
+                            'whole milk' => 'Whole Milk',
+                            'non-fat milk' => 'Non-Fat Milk',
+                            'sub soymilk' => 'Sub Soymilk',
+                            'sub coconutmilk' => 'Sub Coconutmilk',
+                        ]"
+                            :required="true" />
 
-                    <!-- Choice of Espresso -->
-                    <x-checkbox-customization-card label="Choice of Espresso" name="espresso" :options="[
-                        'decaf' => 'Decaf - Free',
-                        'add shot' => 'Add Espresso shot - ₱40',
-                    ]" :required="false" />
+                        <x-checkbox-customization-card label="Espresso:" name="form.espresso" :options="[
+                            'decaf' => 'Decaf',
+                            'add shot' => 'Add Shot',
+                        ]"
+                            :required="false" />
 
-                    <!-- Add Syrup -->
-                    <x-checkbox-customization-card label="Add Syrup" name="syrup" :options="[
-                        'add vanilla syrup' => 'Add Vanilla Syrup - ₱25',
-                        'add caramel syrup' => 'Add Caramel Syrup - ₱25',
-                        'add hazelnut syrup' => 'Add Hazelnut Syrup - ₱25',
-                        'add salted caramel syrup' => 'Add Salted Caramel Syrup - ₱25',
-                    ]" :required="false"/>
+                        <x-checkbox-customization-card label="Syrup:" name="form.syrup" :options="[
+                            'add vanilla syrup' => 'Add Vanilla Syrup',
+                            'add caramel syrup' => 'Add Caramel Syrup',
+                            'add hazelnut syrup' => 'Add Hazelnut Syrup',
+                            'add salted caramel syrup' => 'Add Salted Caramel Syrup',
+                        ]"
+                            :required="false" />
 
-                    <!-- Special Instructions -->
-                    <div class="mb-4">
-                        <label for="special_instructions" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Special Instructions</label>
-                        <textarea id="special_instructions" name="special_instructions" rows="3" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 focus:ring-indigo-500 focus:border-indigo-500">{{ old('special_instructions') }}</textarea>
-                    </div>
+                        <label for="special_instructions"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Special
+                            Instructions</label>
+                        <textarea id="special_instructions" wire:model="form.special_instructions" rows="3"
+                            class="mb-4 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
 
-                    <!-- Add to Cart Button -->
-                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Add to Cart</button>
-                </form>
+                        <button type="submit"
+                            class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Add to
+                            cart</button>
+                    </form>
+                </div>
             </div>
         </div>
     @endif

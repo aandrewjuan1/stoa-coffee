@@ -25,4 +25,13 @@ class Product extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+
+    public function customizations()
+    {
+        return $this->belongsToMany(Customization::class)->withTimestamps();
+    }
+    public function customizationItems()
+    {
+        return $this->belongsToMany(CustomizationItem::class)->withTimestamps();
+    }
 }

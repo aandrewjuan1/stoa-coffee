@@ -14,8 +14,9 @@
                 </div>
             </form>    
             <div class="flex">
-                <a href="{{ route('categories.create') }}" class="bg-green-500 hover:bg-green-600 text-white mr-2 py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Category</a>            
-                <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Product</a>        
+                <a href="{{ route('customizations.create') }}" class="bg-green-500 hover:bg-green-600 text-white mr-2 py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Customizations</a>            
+                <a href="{{ route('categories.create') }}" class="bg-green-500 hover:bg-green-600 text-white mr-2 py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Categories</a>            
+                <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out">Add New Products</a>        
             </div>    
         </div>
 

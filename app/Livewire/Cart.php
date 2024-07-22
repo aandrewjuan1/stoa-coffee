@@ -18,19 +18,15 @@ use Livewire\Attributes\Reactive;
 
 class Cart extends Component
 {
-    public Collection $selectedItems;
-    protected CartModel $cart;
-    #[Reactive]
-    protected Collection $cartItems;
+    public ?Collection $selectedItems;
+    public CartModel $cart;
+    public ?Collection $cartItems;
     public float $totalPrice = 0;
 
     public function render()
     {
         $this->loadCart();
-        return view('cart.index', [
-            'cartItems' => $this->cartItems,
-            'cart' => $this->cart,
-        ]);
+        return view('cart.index');
     }
 
     protected function loadCart(): void
@@ -81,9 +77,7 @@ class Cart extends Component
             return;
         }
 
-        $this->selectedItems->each(function ($item) {
-            $item->delete();
-        });
+        CartItem::whereIn('id', $this->selectedItems->pluck('id'))->delete();
 
         $this->setShowMessageEvent('Items Removed');
     }
@@ -132,8 +126,9 @@ class Cart extends Component
 
                 $orderItem->customizations()->sync($cartItem->customizations->pluck('id'));
                 $orderItem->customizationItems()->sync($cartItem->customizationItems->pluck('id'));
-                $cartItem->delete();
             });
+
+            CartItem::whereIn('id', $cartItems->pluck('id'))->delete();
 
             DB::commit();
 
@@ -142,6 +137,7 @@ class Cart extends Component
             $this->redirect(route('orders.success', ['order' => $order->load('orderItems.customizations', 'orderItems.customizationItems')]), navigate: true);
         } catch (\Exception $exception) {
             DB::rollBack();
+            Log::error($exception);
             $this->setShowMessageEvent('There was an error processing your order. Please try again.');
         }
     }

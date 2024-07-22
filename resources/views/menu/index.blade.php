@@ -19,7 +19,7 @@
         @foreach ($products as $product)
             <div wire:key="{{ $product->id }}"
                 class="dark:bg-gray-800 bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 hover:shadow-lg">
-                <a href="#" wire:click.prevent="$dispatch('show-product', { id: {{ $product->id }} })">
+                <a href="#" wire:click="$dispatch('show-product', { id: {{ $product->id }} })">
                     <img src="{{ $product->image }}" class="w-full h-48 object-cover" alt="{{ $product->name }}">
                     <div class="flex justify-between mx-3 my-2">
                         <span class="text-3xl font-bold mb-2">{{ $product->name }}</span>

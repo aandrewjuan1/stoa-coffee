@@ -150,7 +150,6 @@ class CartController extends Controller
         $userId = Auth::id();
 
         try {
-
             // Start a database transaction
             DB::beginTransaction();
 
@@ -191,7 +190,6 @@ class CartController extends Controller
             DB::rollBack();
 
             // Log the error for debugging purposes
-            Log::error('Error adding product to cart: ' . $e->getMessage());
 
             // Redirect back with an error message
             return redirect()->back()->with('error', 'Failed to add product to cart. Please try again.');

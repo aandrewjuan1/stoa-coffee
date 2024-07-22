@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Livewire\Cart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CustomizationController;
 use App\Http\Controllers\OrderController;
 use App\Livewire\Menu;
 
@@ -25,13 +26,15 @@ Route::middleware('auth')->group(function () {
 
 // Menu
 Route::get('/menu', Menu::class)->name('menu.index')->lazy();
-Route::get('/menu/{product:name}', [MenuController::class, 'showProduct'])->name('menu.showProduct');
 
 // Inventory, Categories, and Products (admin)
 Route::middleware(['admin'])->group(function () {
     // Category
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    //Customization
+    Route::get('/customizations/create', [CustomizationController::class, 'create'])->name('customizations.create');
+    Route::post('/customizations/create', [CustomizationController::class, 'create'])->name('customizations.store');
     // Inventory
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     // Products

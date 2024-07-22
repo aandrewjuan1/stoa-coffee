@@ -15,9 +15,9 @@ class Menu extends Component
 
     public function loadProducts(): void
     {
-        $this->products = Product::where('name', 'like', '%' . $this->searchQuery . '%')
+        $this->products = Product::where('name', 'like', "%{$this->searchQuery}%")
             ->orWhereHas('categories', function ($query) {
-                $query->where('name', 'like', '%' . $this->searchQuery . '%');
+                $query->where('name', 'like', "%{$this->searchQuery}%");
             })
             ->get();
     }
