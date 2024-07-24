@@ -26,12 +26,22 @@ class Product extends Model
         return $this->hasMany(CartItem::class);
     }
 
-    public function customizations()
+    public function customizations(): BelongsToMany
     {
         return $this->belongsToMany(Customization::class)->withTimestamps();
     }
-    public function customizationItems()
+    public function customizationItems(): BelongsToMany
     {
         return $this->belongsToMany(CustomizationItem::class)->withTimestamps();
+    }
+
+    public function scopeSearch($query, $searchQuery): void
+    {
+        $searchQuery = trim($searchQuery);
+        
+        $query->where('name', 'like', "%{$searchQuery}%")
+            ->orWhereHas('categories', function ($query) use ($searchQuery) {
+                $query->where('name', 'like', "%{$searchQuery}%");
+            });
     }
 }

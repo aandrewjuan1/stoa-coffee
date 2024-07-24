@@ -31,9 +31,4 @@ class MenuForm extends Form
 
     #[Validate('nullable|string|max:255')]
     public ?string $special_instructions;
-
-    public function resetForm(): void
-    {
-        $this->reset();
-    }
 }

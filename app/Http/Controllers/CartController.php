@@ -144,58 +144,6 @@ class CartController extends Controller
         ];
     }
 
-    public function addToCart(AddToCartRequest $request)
-    {
-        // Get the authenticated user ID
-        $userId = Auth::id();
-
-        try {
-            // Start a database transaction
-            DB::beginTransaction();
-
-            // Get the customizations for the cart item
-            $customizations = $this->setcustomizations($request);
-
-            // Get or create the cart for the current user so we can insert the cart items
-            $cart = Cart::firstOrCreate(['user_id' => $userId]);
-            $cartId = $cart->id;
-
-            // Check if the cart item with the same customizations already exists in the cart
-            $cartItem = $this->checkIfTheCartItemAlreadyExists($customizations, $cartId, $request->product_id);
-
-            if ($cartItem) {
-                // If yes, just increment the quantity
-                $cartItem->increment('quantity');
-                $cartItem->save();
-            } else {
-                // If not, create a new cart item
-                $cartItem = CartItem::create([
-                    'cart_id' => $cartId,
-                    'product_id' => $request->product_id,
-                    'quantity' => $request->quantity,
-                    'price' => $request->product_price,
-                ]);
-
-                // Attach the customizations in the cart item
-                $this->syncCustomizations($cartItem, $customizations);
-            }
-
-            // Commit the transaction
-            DB::commit();
-
-            // Redirect back with a success message
-            return redirect(route('menu.index'))->with('success', 'Product added to cart successfully!');
-        } catch (\Exception $e) {
-            // Rollback the transaction if there's an error
-            DB::rollBack();
-
-            // Log the error for debugging purposes
-
-            // Redirect back with an error message
-            return redirect()->back()->with('error', 'Failed to add product to cart. Please try again.');
-        }
-    }
-
     public function edit(CartItem $cartItem)
     {
         // Get all customization values to check the boxes

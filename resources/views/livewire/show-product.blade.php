@@ -32,53 +32,22 @@
                         </a>
                     @endforeach
                 </div>
-                <p class="text-gray-700 dark:text-gray-300 mb-4">{{ $product->description }}</p>
+                <p class="text-gray-300 mb-4">{{ $product->description }}</p>
                 <p class="text-2xl font-bold text-gray-300 mb-4">₱{{ $product->price }}</p>
 
                 <!-- Customizations -->
                 <div>
                     <form wire:submit="addTocart">
 
-                        <x-radio-button-customization-card label="Temperature:" name="form.temperature"
-                            :options="[
-                                'hot' => 'Hot',
-                                'iced' => 'Iced',
-                            ]" :required="true" />
-
-                        <x-radio-button-customization-card label="Size:" name="form.size" :options="[
-                            '16oz' => '16oz',
-                            '22oz' => '22oz',
-                        ]"
-                            :required="true" />
-
-                        <x-radio-button-customization-card label="Sweetness:" name="form.sweetness" :options="[
-                            'not sweet' => 'Not Sweet',
-                            'less sweet' => 'Less Sweet',
-                            'regular sweetness' => 'Regular Sweetness',
-                        ]"
-                            :required="true" />
-
-                        <x-radio-button-customization-card label="Milk:" name="form.milk" :options="[
-                            'whole milk' => 'Whole Milk',
-                            'non-fat milk' => 'Non-Fat Milk',
-                            'sub soymilk' => 'Sub Soymilk',
-                            'sub coconutmilk' => 'Sub Coconutmilk',
-                        ]"
-                            :required="true" />
-
-                        <x-checkbox-customization-card label="Espresso:" name="form.espresso" :options="[
-                            'decaf' => 'Decaf',
-                            'add shot' => 'Add Shot',
-                        ]"
-                            :required="false" />
-
-                        <x-checkbox-customization-card label="Syrup:" name="form.syrup" :options="[
-                            'add vanilla syrup' => 'Add Vanilla Syrup',
-                            'add caramel syrup' => 'Add Caramel Syrup',
-                            'add hazelnut syrup' => 'Add Hazelnut Syrup',
-                            'add salted caramel syrup' => 'Add Salted Caramel Syrup',
-                        ]"
-                            :required="false" />
+                        @foreach ($product->customizations as $customization)
+                            @if ($customization->input_field == 'radio_button')
+                                <x-radio-button-customization-card :label="$customization->type . ':'" :name="'form.' . $customization->type" :options="$customization->customizationItems->pluck('value', 'value')->toArray()"
+                                    :required="true" />
+                            @elseif ($customization->input_field == 'check_box')
+                                <x-checkbox-customization-card :label="$customization->type . ':'" :name="'form.' . $customization->type" :options="$customization->customizationItems->pluck('value', 'value')->toArray()"
+                                    :required="false" />
+                            @endif
+                        @endforeach
 
                         <label for="special_instructions"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Special

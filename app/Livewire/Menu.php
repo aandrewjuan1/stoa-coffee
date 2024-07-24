@@ -13,15 +13,6 @@ class Menu extends Component
     public string $searchQuery = '';
     public Collection $products;
 
-    public function loadProducts(): void
-    {
-        $this->products = Product::where('name', 'like', "%{$this->searchQuery}%")
-            ->orWhereHas('categories', function ($query) {
-                $query->where('name', 'like', "%{$this->searchQuery}%");
-            })
-            ->get();
-    }
-
     public function placeholder()
     {
         return view('livewire.menu-skeleton');
@@ -29,7 +20,7 @@ class Menu extends Component
 
     public function render()
     {
-        $this->loadProducts();
+        $this->products = Product::search($this->searchQuery)->get();
         return view('menu.index');
     }
 }

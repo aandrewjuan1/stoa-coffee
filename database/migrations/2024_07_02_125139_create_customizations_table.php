@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('customizations', function (Blueprint $table) {
             $table->id();
             $table->string('type')->unique();
+            $table->string('input_field');
             $table->string('required')->default(false);
             $table->timestamps();
         });

@@ -31,8 +31,9 @@ class ShowProduct extends Component
             return;
         }
 
-        $this->product = Product::find($id);
-        $this->form->resetForm();
+        $this->product = Product::with('customizations.customizationItems')->find($id);
+        $this->form->reset();
+        $this->form->resetValidation();
         $this->dispatch('open-modal', 'show-product');
     }
 

@@ -10,6 +10,11 @@ class CustomizationItem extends Model
     use HasFactory;
 
     protected $guarded = [];
+    
+    public function setValueAttribute($value)
+    {
+        $this->attributes['value'] = strtolower($value);
+    }
 
     public function customization()
     {
