@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customization;
 use App\Models\CustomizationItem;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class CustomizationSeeder extends Seeder
 {
     public function run(): void
     {
-        $customizationTypes = [
+        $customizations = [
             'temperature' => [
                 ['input_field' => 'radio_button', 'value' => 'hot', 'price' => 0.00, 'required' => true],
                 ['input_field' => 'radio_button', 'value' => 'iced', 'price' => 0.00, 'required' => true],
@@ -41,25 +41,26 @@ class CustomizationSeeder extends Seeder
                 ['input_field' => 'check_box', 'value' => 'add hazelnut syrup', 'price' => 30.00, 'required' => false],
                 ['input_field' => 'check_box', 'value' => 'add salted caramel syrup', 'price' => 30.00, 'required' => false],
             ],
-            'special instructions' => [
+            'special_instructions' => [
                 ['input_field' => 'text_area', 'required' => false]
             ],
         ];
 
         $typeIds = [];
-        foreach ($customizationTypes as $type => $values) {
-            $id = DB::table('customizations')->insertGetId([
+        foreach ($customizations as $type => $values) {
+            $customization = Customization::create([
                 'type' => $type,
                 'input_field' => $values[0]['input_field'],
                 'required' => $values[0]['required'],
             ]);
-            $typeIds[$type] = $id;
+
+            $typeIds[$type] = $customization->id;
         }
 
-        foreach ($customizationTypes as $type => $items) {
+        foreach ($customizations as $type => $items) {
             foreach ($items as $item) {
                 if (isset($item['value'])) {
-                    DB::table('customization_items')->insert([
+                    CustomizationItem::create([
                         'customization_id' => $typeIds[$type],
                         'value' => strtolower($item['value']),
                         'price' => $item['price'],

@@ -5,7 +5,9 @@ namespace App\Traits;
 use App\Models\CartItem;
 use App\Models\Customization;
 use App\Models\CustomizationItem;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 trait CartCustomizationTrait
 {
@@ -58,6 +60,8 @@ trait CartCustomizationTrait
         $customizationIds = [];
         $customizationPrices = 0;
 
+        Log::info(json_encode($customizations));
+
         // Attach each customization
         foreach ($customizations as $type => $value) {
             // Make sure the value is not null
@@ -78,7 +82,7 @@ trait CartCustomizationTrait
                     }
                 } else {
                     // Find customization value
-                    $customizationItem = CustomizationItem::where('value', $value)->first();
+                    $customizationItem = CustomizationItem::firstOrCreate(['customization_id' => $customization->id, 'value' => $value]);
 
                     $customizationItemIds[] = $customizationItem->id;
                     $customizationPrices += $customizationItem->price;
