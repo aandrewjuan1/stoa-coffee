@@ -81,9 +81,9 @@ class Cart extends Component
         $this->setShowMessageEvent('Items Removed');
     }
 
-    protected function setShowMessageEvent(string $message): void
+    public function setShowMessageEvent(string $message, string $color = 'text-red-500'): void
     {
-        $this->dispatch('show-message', $message);
+        $this->dispatch('show-message', message: $message, color: $color);
     }
 
     public function toggleChecked(CartItem $cartItem): void

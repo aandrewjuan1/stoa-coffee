@@ -32,25 +32,32 @@ class EditCart extends Component
     
     protected function setExistingCustomizations(): void
     {
+        // Get the existing customizations IDS in cart items so we can get the customization values later
         $stringCustomizationIds = $this->cartItem->customizations()->where('input_field', '!=', 'check_box')->pluck('customizations.id', 'type')->toArray();
         $arrayCustomizationsIds = $this->cartItem->customizations()->where('input_field', 'check_box')->pluck('customizations.id', 'type')->toArray();
 
-        $stringCustomizations = ['temperature', 'size', 'sweetness', 'milk', 'special_instructions'];
-        $arrayCustomizations = ['espresso', 'syrup'];
+        // Set the types where their values is either string or array
+        $stringCustomizationsTypes = ['temperature', 'size', 'sweetness', 'milk', 'special_instructions'];
+        $arrayCustomizationsTypes = ['espresso', 'syrup'];
 
-        $this->setCustomizations($stringCustomizations, $stringCustomizationIds, false);
-        $this->setCustomizations($arrayCustomizations, $arrayCustomizationsIds, true);
+        // Set the existing customization in the form properties
+        $this->setValuesInFormProperties($stringCustomizationsTypes, $stringCustomizationIds, false);
+        $this->setValuesInFormProperties($arrayCustomizationsTypes, $arrayCustomizationsIds, true);
     }
 
-    protected function setCustomizations(array $customizations, array $customizationIds, bool $isArray): void
+    protected function setValuesInFormProperties(array $customizationsTypes, array $customizationIds, bool $isArray): void
     {
-        foreach ($customizations as $property) {
-            if (!array_key_exists($property, $customizationIds)) {
+        foreach ($customizationsTypes as $type) {
+            // Check if type exists in the cart item's customizations
+            if (!array_key_exists($type, $customizationIds)) {
                 continue;
             }
 
-            $typeId = $customizationIds[$property];
-            $this->form->$property = $isArray 
+            // Get the customization ID if it exists in the cart item's customizations
+            $typeId = $customizationIds[$type];
+
+            // Get the customization values for each cart item using the customizations IDS we got earlier
+            $this->form->$type = $isArray 
                 ? $this->cartItem->customizationItems()->where('customization_id', $typeId)->pluck('value')->toArray()
                 : $this->cartItem->customizationItems()->where('customization_id', $typeId)->pluck('value')->first();
         }
@@ -58,12 +65,26 @@ class EditCart extends Component
 
     public function update()
     {
-        $this->authorize('buyer');
         $this->validate();
-        $this->syncCustomizations($this->cartItem, $this->form->all());
 
-        $this->dispatch('close-modal', 'edit-cart');
-        $this->dispatch('load-cart', 'edit-cart');
+        DB::beginTransaction();
+
+        try {
+            $this->dispatch('close-modal', 'edit-cart');
+            $this->dispatch('load-cart', 'edit-cart');
+
+            $customizations = $this->form->all();
+            $this->syncCustomizations($this->cartItem, $customizations);
+
+            $this->dispatch('show-message', message : 'Cart updated', color : 'text-blue-600');
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Error adding product to cart: ' . $e->getMessage());
+        }
     }
     
     public function render()

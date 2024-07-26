@@ -1,18 +1,24 @@
-<div class="justify-center mb-10 text-gray-200">
-    <div class="flex justify-between items-center my-8 mx-20 space-x-4">
-        <div x-data="{ message: '', show: false }" class="flex-none my-5 text-lg text-green-500"
-            x-on:add-to-cart-success-message.window="message = $event.detail; show = true; setTimeout(() => show = false, 3000)">
-            <div x-show="show" x-transition>
-                <p x-text="message"></p>
-            </div>
-        </div>
+<div class="justify-center mb-10 text-gray-200 relative">
+    <!-- Success Message Container -->
+    <div x-data="{ message: '', show: false }" class="absolute top-0 left-0 right-0 flex justify-center p-4" x-show="show" x-transition
+        x-on:add-to-cart-success-message.window="message = $event.detail; show = true; setTimeout(() => show = false, 3000)"
+        :class="{
+            'bg-blue-600 text-white': show,
+            'opacity-100': show,
+            'opacity-0': !show
+        }"
+        style="z-index: 1000; transition: opacity 0.5s ease;">
+        <p x-text="message" class="p-2 rounded-md"></p>
+    </div>
+
+    <div class="flex justify-between items-center my-8 mx-20 space-x-4 pt-2">
+        <!-- Search Input Field -->
         <div class="flex-grow flex justify-center">
             <input type="text" wire:model.live="searchQuery" placeholder="Search products..."
-                class="dark:bg-gray-800 border border-gray-300 rounded-md py-2 px-4">
+                class="bg-gray-800 border border-gray-300 rounded-md py-2 px-4">
         </div>
     </div>
-    
-    
+
     <div class="grid mx-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         @foreach ($products as $product)
             <div wire:key="{{ $product->id }}"
@@ -32,7 +38,7 @@
                 </div>
             </div>
         @endforeach
-        
+
         <x-modal name="show-product">
             <livewire:show-product />
         </x-modal>

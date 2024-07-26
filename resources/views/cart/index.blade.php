@@ -2,9 +2,9 @@
     <div class="text-justify bg-gray-800 text-white p-6 mb-8 mt-8 rounded-lg shadow-md w-full max-w-5xl">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold mb-6">Cart</h1>
-            <div x-data="{ message: '', show: false }"
-                x-on:show-message.window="message = $event.detail; show = true; setTimeout(() => show = false, 3000)">
-                <div x-show="show" class="text-red-500" x-transition>
+            <div x-data="{ message: '', color: '',show: false }"
+                x-on:show-message.window="message = $event.detail.message; color = $event.detail.color; show = true; setTimeout(() => show = false, 3000)">
+                <div x-show="show" :class="color" x-transition>
                     <p x-text="message"></p>
                 </div>
             </div>
