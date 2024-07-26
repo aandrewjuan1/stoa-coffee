@@ -60,8 +60,6 @@ trait CartCustomizationTrait
         $customizationIds = [];
         $customizationPrices = 0;
 
-        Log::info(json_encode($customizations));
-
         // Attach each customization
         foreach ($customizations as $type => $value) {
             // Make sure the value is not null

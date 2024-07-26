@@ -9,12 +9,10 @@ use App\Models\Cart as CartModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Attributes\Validate;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\Reactive;
 
 class Cart extends Component
 {
@@ -29,7 +27,8 @@ class Cart extends Component
         return view('cart.index');
     }
 
-    protected function loadCart(): void
+    #[On('load-cart')]
+    public function loadCart(): void
     {
         $this->cart = CartModel::firstOrCreate([
             'user_id' => Auth::id()
@@ -93,7 +92,7 @@ class Cart extends Component
 
         $cartItem->save();
     }
-
+    
     public function checkout(): void
     {
         if ($this->selectedItems->isEmpty()) {

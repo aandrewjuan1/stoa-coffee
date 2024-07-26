@@ -7,7 +7,7 @@
         @foreach($options as $key => $value)
             <div class="flex items-center">
                 <input type="checkbox" id="{{ $value }}"
-                    wire:model.blur="{{ $name }}"
+                    wire:model="{{ $name }}"
                     value="{{ $value }}"
                     class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded dark:text-gray-400 dark:border-gray-700 dark:bg-gray-800">
                 <label for="{{ $value }}"

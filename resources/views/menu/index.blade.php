@@ -1,20 +1,18 @@
 <div class="justify-center mb-10 text-gray-200">
-    <!-- Search Form -->
-    <div class="flex justify-center my-8">
-        <div class="flex">
+    <div class="flex justify-between items-center my-8 mx-20 space-x-4">
+        <div x-data="{ message: '', show: false }" class="flex-none my-5 text-lg text-green-500"
+            x-on:add-to-cart-success-message.window="message = $event.detail; show = true; setTimeout(() => show = false, 3000)">
+            <div x-show="show" x-transition>
+                <p x-text="message"></p>
+            </div>
+        </div>
+        <div class="flex-grow flex justify-center">
             <input type="text" wire:model.live="searchQuery" placeholder="Search products..."
-                class="dark:bg-gray-800 border border-gray-300 rounded-md py-2 px-4 mr-2">
+                class="dark:bg-gray-800 border border-gray-300 rounded-md py-2 px-4">
         </div>
     </div>
-    @if (session('success'))
-        <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-            class="flex my-5 text-lg text-green-500">{{ session('success') }}</p>
-    @endif
-    @if ($errors->any())
-        <div class="mb-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            {{ 'error ka sa products form'}}
-        </div>
-    @endif
+    
+    
     <div class="grid mx-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         @foreach ($products as $product)
             <div wire:key="{{ $product->id }}"
@@ -26,7 +24,7 @@
                         <span class="text-2xl mb-2">₱{{ $product->price }}</span>
                     </div>
                 </a>
-                <div class="flex space-x-2 m-3 ">
+                <div class="flex space-x-2 m-3">
                     @foreach ($product->categories as $category)
                         <button type="button" wire:click="$set('searchQuery', '{{ $category->name }}')"
                             class="px-1.5 bg-gray-200 text-gray-800 rounded-lg">{{ $category->name }}</button>

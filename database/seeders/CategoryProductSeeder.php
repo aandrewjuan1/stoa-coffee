@@ -10,6 +10,9 @@ class CategoryProductSeeder extends Seeder
 {
     public function run(): void
     {
+        Category::create([
+            'name' => 'Coffee',
+        ]);
         $categories = Category::factory(5)->create();
         $products = Product::factory(20)->create();
 

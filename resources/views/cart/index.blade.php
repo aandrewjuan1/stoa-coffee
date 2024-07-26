@@ -49,4 +49,7 @@
             </div>
         @endif
     </div>
+    <x-modal name="edit-cart">
+        <livewire:edit-cart />
+    </x-modal>
 </div>

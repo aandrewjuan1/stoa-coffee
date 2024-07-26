@@ -84,8 +84,9 @@ class ShowProduct extends Component
             // Commit the transaction
             DB::commit();
 
-            // Redirect back with a success message
-            return redirect(route('menu.index'))->with('success', 'Product added to cart successfully!');
+            $this->dispatch('add-to-cart-success-message', "{$this->product->name} added successfully");
+            $this->dispatch('close-modal', 'show-product');
+
         } catch (\Exception $e) {
             // Rollback the transaction if there's an error
             DB::rollBack();
