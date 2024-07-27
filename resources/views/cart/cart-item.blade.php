@@ -1,4 +1,4 @@
-<tr class="border-b border-gray-700">
+<tr class="border-b border-gray-700" wire:key="{{ $item->id }}">
     <td class="py-3 px-4">
         <div>{{ $item->product->name }}</div>
         <div class="ml-4">
@@ -15,17 +15,17 @@
     <td class="py-3 px-4">₱{{ $item->price * $item->quantity }}</td>
     <td class="py-3 px-4">
         <div class="flex items-center">
-            <button type="button" wire:click="$parent.decrementQuantity({{ $item->id }})"
+            <button type="button" wire:click="decrementQuantity({{ $item->id }})"
                 wire:loading.attr="disabled"
                 class="text-gray-300 focus:outline-none {{ $item->quantity <= 1 ? 'opacity-50 cursor-not-allowed' : '' }}"
                 {{ $item->quantity <= 1 ? 'disabled' : '' }}>
                 -
             </button>
             <span class="mx-2">{{ $item->quantity }}</span>
-            <button type="button" wire:click="$parent.incrementQuantity({{ $item->id }})"
+            <button type="button" wire:click="incrementQuantity({{ $item->id }})"
                 class="text-gray-300 focus:outline-none">
                 +
-        </button>
+            </button>
         </div>
     </td>
     <td class="py-3 px-4">
@@ -36,8 +36,7 @@
                     <img src="{{ Vite::asset('resources/images/edit-logo.svg') }}"
                         alt="Edit"
                         class="w-6 h-6 rounded hover:opacity-50">
-                    <span
-                        class="opacity-0 group-hover:opacity-100 absolute top-0 left-1/2 transform -translate-x-1/2 -mt-8 bg-gray-800 text-white text-xs py-1 px-2 rounded">
+                    <span class="opacity-0 group-hover:opacity-100 absolute top-0 left-1/2 transform -translate-x-1/2 -mt-8 bg-gray-800 text-white text-xs py-1 px-2 rounded">
                         Edit
                     </span>
                 </button>
@@ -45,7 +44,7 @@
             <div class="relative group ml-2">
                 <label>
                     <input type="checkbox"
-                            wire:change="$parent.toggleChecked({{ $item->id }})"
+                            wire:change="toggleChecked({{ $item->id }})"
                             @checked($item->is_checked)>
                     {{ $item->name }}
                 </label>

@@ -76,7 +76,7 @@ class EditCart extends Component
             $customizations = $this->form->all();
             $this->syncCustomizations($this->cartItem, $customizations);
 
-            $this->dispatch('show-message', message : 'Cart updated', color : 'text-blue-600');
+            $this->dispatch('show-message', message : 'Cart updated', color : 'text-blue-500');
 
             DB::commit();
 
