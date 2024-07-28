@@ -13,11 +13,6 @@ class Menu extends Component
     public string $searchQuery = '';
     public Collection $products;
 
-    public function placeholder()
-    {
-        return view('livewire.menu-skeleton');
-    }
-
     public function render()
     {
         $this->products = Product::search($this->searchQuery)->get();

@@ -47,6 +47,8 @@ class CustomizationSeeder extends Seeder
         ];
 
         $typeIds = [];
+
+        // Seed the customizations table
         foreach ($customizations as $type => $values) {
             $customization = Customization::create([
                 'type' => $type,
@@ -57,6 +59,7 @@ class CustomizationSeeder extends Seeder
             $typeIds[$type] = $customization->id;
         }
 
+        // Seed customization items table
         foreach ($customizations as $type => $items) {
             foreach ($items as $item) {
                 if (isset($item['value'])) {
@@ -72,6 +75,7 @@ class CustomizationSeeder extends Seeder
         $products = Product::all();
         $customizationItemsIds = CustomizationItem::pluck('id')->toArray();
 
+        // Attach the customizations in the products
         foreach ($products as $product) {
             $product->customizations()->sync($typeIds);
             $product->customizationItems()->sync($customizationItemsIds);

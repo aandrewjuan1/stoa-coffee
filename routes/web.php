@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Menu
-Route::get('/menu', Menu::class)->name('menu.index')->lazy();
+Route::get('/menu', Menu::class)->name('menu.index');
 
 // Inventory, Categories, and Products (admin)
 Route::middleware(['admin'])->group(function () {
@@ -34,7 +34,7 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     //Customization
     Route::get('/customizations/create', [CustomizationController::class, 'create'])->name('customizations.create');
-    Route::post('/customizations/create', [CustomizationController::class, 'create'])->name('customizations.store');
+    Route::post('/customizations/create', [CustomizationController::class, 'store'])->name('customizations.store');
     // Inventory
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     // Products
@@ -47,7 +47,7 @@ Route::middleware(['admin'])->group(function () {
 });
 
 // Cart (buyer)
-Route::middleware('auth')->group(function () {
+Route::middleware('can:buyer')->group(function () {
     Route::get('/cart', Cart::class)->name('cart.index');
     Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart/edit/{cartItem}', [CartController::class, 'edit'])->name('cart.edit');
@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Orders (admin or barista)
-Route::middleware('can:baristaOrAdmin')->group(function () {
+Route::middleware('baristaOrAdmin')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');

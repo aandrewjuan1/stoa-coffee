@@ -31,7 +31,8 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        return view('orders.show', ['order' => $order]);
+        $order->load('orderItems.customizations', 'orderItems.customizationItems');
+        return view('orders.show', compact('order'));
     }
 
     public function update(Request $request, Order $order)
@@ -46,11 +47,6 @@ class OrderController extends Controller
 
         // Redirect back to the order details page
         return redirect()->route('orders.show', ['order' => $order]);
-    }
-
-
-    public function store(Request $request)
-    {
     }
 
     public function showOrderSuccess(Order $order)

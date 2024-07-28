@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="grid grid-cols-2 gap-5 mx-auto px-4 py-4 text-gray-900 dark:text-gray-200">
+    <div class="grid grid-cols-2 gap-5 mx-20 px-4 py-4 text-gray-900 dark:text-gray-200">
         <div>
             <h1 class="flex justify-center text-2xl font-bold">Pending Orders</h1>
             <div class="mt-4 space-y-4">

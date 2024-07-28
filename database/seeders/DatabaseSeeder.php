@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             BuyerSeeder::class,
             BaristaSeeder::class,
             CategoryProductSeeder::class,
-            OrderSeeder::class,
             CustomizationSeeder::class,
         ]);
     }

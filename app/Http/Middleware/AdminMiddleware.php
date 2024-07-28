@@ -21,6 +21,6 @@ class AdminMiddleware
             return $next($request);
         }
 
-        abort(404); // Redirect to a default page if not admin
+        abort(404);
     }
 }

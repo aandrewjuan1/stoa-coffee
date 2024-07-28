@@ -29,7 +29,6 @@
                             <th class="px-4 py-2">Name</th>
                             <th class="px-4 py-2">Description</th>
                             <th class="px-4 py-2">Price</th>
-                            {{-- <th class="px-4 py-2">Quantity</th> --}}
                             <th class="px-4 py-2">Categories</th>
                             <th class="px-4 py-2">Actions</th>
                         </tr>
@@ -37,7 +36,7 @@
                     <tbody>
                         @foreach ($products as $product)
                         <tr>
-                            <td class="border px-4 py-2"><a href="{{ route('products.show', ['product' => $product]) }}">{{ $product->name }}</a></td>
+                            <td class="border px-4 py-2"><span>{{ $product->name }}</span></td>
                             <td class="border px-4 py-2">{{ $product->description }}</td>
                             <td class="border px-4 py-2">{{ $product->price }}</td>
                             {{-- <td class="border px-4 py-2">{{ $product->quantity }}</td> --}}
