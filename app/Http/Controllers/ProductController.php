@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
+use App\Models\Customization;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -21,7 +22,8 @@ class ProductController extends Controller
     {
         //
         $categories = Category::all();
-        return view('products.create', ['categories' => $categories]);
+        $customizations = Customization::all();
+        return view('products.create', ['categories' => $categories, 'customizations' => $customizations]);
     }
     
     /**
@@ -48,6 +50,10 @@ class ProductController extends Controller
         if ($request->has('categories')) {
             $product->categories()->attach($request->categories);
         }
+        // Attach customizations to the product
+        if ($request->has('customizations')) {
+            $product->customizations()->attach($request->customizations);
+        }
 
         // Redirect or return response
         return redirect()->route('menu.index');
@@ -70,7 +76,8 @@ class ProductController extends Controller
     {
         //
         $categories = Category::all();
-        return view('products.edit', ['product' => $product, 'categories' => $categories]);
+        $customizations = Customization::all();
+        return view('products.edit', ['product' => $product, 'categories' => $categories, 'customizations' => $customizations]);
 
     }
 
@@ -99,6 +106,13 @@ class ProductController extends Controller
             $product->categories()->sync($request->categories); // Sync ensures no duplicates
         } else {
             $product->categories()->detach(); // If no categories selected, detach all
+        }
+
+        // Attach customizations to the product
+        if ($request->has('customizations')) {
+            $product->customizations()->sync($request->customizations);
+        } else {
+            $product->customizations()->detach(); // If no customizations selected, detach all
         }
         // Redirect or return response
         return redirect()->route('inventory.index');

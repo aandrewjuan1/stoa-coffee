@@ -37,6 +37,17 @@
                         @endforeach
                     </div>
                 </div>
+
+                <div class="mb-4">
+                    <x-input-label for="customizations" :value="__('Customizations')" />
+                    <div class="grid grid-cols-3 gap-4">
+                        @foreach ($customizations as $type)
+                            <label class="flex items-center">
+                                <input type="checkbox" name="customizations[]" value="{{ $type->id }}" {{ $product->customizations->contains($type->id) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-gray-600"><span>{{ $type->type }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
                 
                 <div class="mb-4">
                     <x-input-label for="description" :value="__('Description')" />

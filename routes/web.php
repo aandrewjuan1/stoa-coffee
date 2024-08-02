@@ -6,6 +6,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ProductController;
 use App\Livewire\Cart;
+use App\Livewire\CreateCategory;
+use App\Livewire\CreateCustomization;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomizationController;
@@ -30,10 +32,10 @@ Route::get('/menu', Menu::class)->name('menu.index');
 // Inventory, Categories, and Products (admin)
 Route::middleware(['admin'])->group(function () {
     // Category
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::get('/categories/create', CreateCategory::class)->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     //Customization
-    Route::get('/customizations/create', [CustomizationController::class, 'create'])->name('customizations.create');
+    Route::get('/customizations/create', CreateCustomization::class)->name('customizations.create');
     Route::post('/customizations/create', [CustomizationController::class, 'store'])->name('customizations.store');
     // Inventory
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');

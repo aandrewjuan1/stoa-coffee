@@ -1,11 +1,11 @@
-<x-app-layout>
+<div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Create Category') }}
         </h2>
     </x-slot>
 
-    <div class="container mx-auto px-4 mb-10 text-gray-200">
+    <div class="container mx-auto px-4 text-gray-200">
         <h1 class="text-center text-4xl font-bold my-8">Create a New Category</h1>
 
         @if ($errors->any())
@@ -26,7 +26,8 @@
                     <x-text-input type="text" name="name" id="name" class="w-full p-2 border border-gray-300 rounded" value="{{ old('name') }}" required />
                 </div>
 
-                <div class="text-center">
+                <div class="flex justify-center space-x-2">
+                    <a href="{{ route('inventory.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">Back</a>
                     <x-primary-button>
                         {{ __('Create Category') }}
                     </x-primary-button>
@@ -41,4 +42,4 @@
             @endforeach
         </div>
     </div>
-</x-app-layout>
+</div>

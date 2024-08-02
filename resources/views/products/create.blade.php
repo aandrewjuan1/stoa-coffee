@@ -35,6 +35,15 @@
                         </label>
                     @endforeach
                 </div>
+                <div class="mb-4">
+                    <x-input-label :value="__('Attach Customizations')" />
+                    @foreach($customizations as $type)
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="customizations[]" value="{{ $type->id }}" class="h-5 w-5 text-indigo-600">
+                            <span class="ml-2">{{ $type->type }}</span>
+                        </label>
+                    @endforeach
+                </div>
                 
                 <div class="mb-4">
                     <x-input-label for="description" :value="__('Description')" />
