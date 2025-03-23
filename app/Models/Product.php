@@ -38,7 +38,7 @@ class Product extends Model
     public function scopeSearch($query, $searchQuery): void
     {
         $searchQuery = trim($searchQuery);
-        
+
         $query->where('name', 'like', "%{$searchQuery}%")
             ->orWhereHas('categories', function ($query) use ($searchQuery) {
                 $query->where('name', 'like', "%{$searchQuery}%");
